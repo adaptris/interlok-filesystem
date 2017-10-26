@@ -13,7 +13,6 @@ import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
 import com.adaptris.core.util.Args;
-import com.adaptris.core.util.ZipFolder;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
