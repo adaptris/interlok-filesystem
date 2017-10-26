@@ -1,4 +1,4 @@
-﻿<project basedir="." default="compile" name="interlok-filesystem" xmlns:adapter="uri:adapter" xmlns:ivy="antlib:org.apache.ivy.ant">
+﻿<project basedir="." default="compile" name="filesystem" xmlns:adapter="uri:adapter" xmlns:ivy="antlib:org.apache.ivy.ant">
   <property file="build.properties"/>
   <property file="ivy.properties"/>
   <import file="${basedir}/ivy/ant-ivy-includes.xml"/> <!-- Ivy tasks -->
@@ -17,7 +17,7 @@
 
     <property name="testsrc.dir"             value="${basedir}/test"/>
     <property name="build.dir"               value="${basedir}/build"/>
-    <property name="test.resources.dir"      value="${basedir}/lib"/>
+    <property name="test.resources.dir"      value="${basedir}/resources/test"/>
     <property name="example-xml.build.dir"   value="${build.dir}/example-xml"/>
     <property name="example.xml"             value="${example-xml.build.dir}"/>
     <property name="doc.dir"                 value="${basedir}/docs"/>
@@ -96,7 +96,7 @@
   <target name="javadoc" depends="prepare-ivy" description="Create javadocs">
     <adapter:uml-javadoc-creator sourcepath="${src.dir}" destdir="${api.doc.dir}">
       <groups>
-        <group title="Interlok File System" packages="com.adaptris.core:com.adaptris.core.*"/>
+        <group title="Interlok File System" packages="com.adaptris.filesystem:com.adaptris.filesystem.*"/>
       </groups>
     </adapter:uml-javadoc-creator>
     <copy todir="${api.doc.dir}">
