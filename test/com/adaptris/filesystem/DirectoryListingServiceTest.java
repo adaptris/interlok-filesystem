@@ -27,7 +27,7 @@ import com.adaptris.core.ServiceException;
 
 public class DirectoryListingServiceTest extends ServiceCase
 {
-  private static final String DIRECTORY_PATH = System.getProperty("user.dir");
+	private static final String DIRECTORY_PATH = System.getProperty("user.dir");
 	private static final String METADATA_KEY = "service-test";
 
 	public DirectoryListingServiceTest(final String testName)
@@ -44,7 +44,6 @@ public class DirectoryListingServiceTest extends ServiceCase
 	@Test
 	public void testService() throws Exception
 	{
-
 		final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
 		final DirectoryListingService service = (DirectoryListingService)retrieveObjectForSampleConfig();
 
@@ -56,7 +55,6 @@ public class DirectoryListingServiceTest extends ServiceCase
 		{
 			assertTrue(ls.contains(file.getName()));
 		}
-
 	}
 
 	@Test
@@ -75,7 +73,7 @@ public class DirectoryListingServiceTest extends ServiceCase
 			assertTrue(ls.contains(file.getName()));
 		}
 	}
-	
+
 	@Test
 	public void testServiceFailedInit() throws Exception
 	{
@@ -96,9 +94,9 @@ public class DirectoryListingServiceTest extends ServiceCase
 	@Override
 	protected Object retrieveObjectForSampleConfig()
 	{
-		final DirectoryListingService service =  new DirectoryListingService();
-    service.setDirectoryPath(DIRECTORY_PATH);
-    service.setMetadataKey(METADATA_KEY);
+		final DirectoryListingService service = new DirectoryListingService();
+		service.setDirectoryPath(DIRECTORY_PATH);
+		service.setMetadataKey(METADATA_KEY);
 		return service;
 	}
 }
