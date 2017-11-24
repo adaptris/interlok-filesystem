@@ -73,7 +73,7 @@ public class CommonsCompressUnzipService extends ServiceImp
               continue;
             }
           }
-          log.debug("Setting payload using file [{}]", entryName);
+          log.debug("Setting payload using entry [{}] from zip.", entryName);
           try(InputStream is = zipFile.getInputStream(entry)) {
             try (OutputStream os = msg.getOutputStream()) {
               IOUtils.copy(is, os);
