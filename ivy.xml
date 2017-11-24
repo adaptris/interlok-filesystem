@@ -36,6 +36,8 @@
     <dependency org="com.adaptris" name="adp-stubs"    rev="${adp-core-version}" conf="test->default"    changing="true"/>
     <dependency org="com.adaptris" name="adp-core-apt" rev="${adp-core-version}" conf="compile->default;ant->default" changing="true"/>
 
+    <dependency org="org.apache.commons" name="commons-compress" rev="1.15" conf="compile->default" />
+
     <dependency org="com.thoughtworks.xstream" name="xstream" rev="1.4.7"/>
 
 	<!-- Test dependencies -->
