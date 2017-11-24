@@ -69,6 +69,7 @@ public class CommonsCompressUnzipService extends ServiceImp
           if (getFilenameMatch() != null){
             Pattern pattern = Pattern.compile(getFilenameMatch());
             if (!pattern.matcher(entryName).matches()){
+              log.trace("The entry [{}] does not match filenameMatch [{}] skipping", entryName, getFilenameMatch());
               continue;
             }
           }
