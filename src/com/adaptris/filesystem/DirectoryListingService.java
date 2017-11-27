@@ -33,22 +33,22 @@ public class DirectoryListingService extends ServiceImp
 	/**
 	 * Whether debug mode is enabled.
 	 */
-  @InputFieldDefault(value = "false")
-  @AdvancedConfig
-  private Boolean debugMode;
+	@InputFieldDefault(value = "false")
+	@AdvancedConfig
+	private Boolean debugMode;
 
 	/**
 	 * The metadata key to export file listing data to.
 	 */
-  @NotBlank
-  private String metadataKey;
+	@NotBlank
+	private String metadataKey;
 
 	/**
 	 * The folder to get a directory listing of.
 	 */
-  @NotBlank
-  @InputFieldHint(expression = true)
-  private String directoryPath;
+	@NotBlank
+	@InputFieldHint(expression = true)
+	private String directoryPath;
 
 	/**
 	 * {@inheritDoc}.
@@ -65,7 +65,7 @@ public class DirectoryListingService extends ServiceImp
 		NumberFormat.getNumberInstance(Locale.UK);
 		try
 		{
-      final String path = message.resolve(getDirectoryPath());
+			final String path = message.resolve(getDirectoryPath());
 			final File directory = new File(path);
 			log.trace("ls: {} ", directory.getAbsolutePath());
 			if (directory.exists() && directory.isDirectory())
@@ -76,7 +76,7 @@ public class DirectoryListingService extends ServiceImp
 					log.trace("Found file: {}", file.getName());
 					buffer.append(file.getName());
 					buffer.append(file.isDirectory() ? "/" : "");
-          if (debugMode())
+					if (debugMode())
 					{
 						buffer.append('\t');
 						buffer.append(humanReadableByteCount(file.length()));
@@ -119,7 +119,7 @@ public class DirectoryListingService extends ServiceImp
 		}
 		else
 		{
-      message.addMessageHeader(metadataKey, output);
+			message.addMessageHeader(metadataKey, output);
 		}
 	}
 
@@ -158,7 +158,7 @@ public class DirectoryListingService extends ServiceImp
 	 *
 	 * @return The directory path parameter.
 	 */
-  public String getDirectoryPath()
+	public String getDirectoryPath()
 	{
 		return directoryPath;
 	}
@@ -169,7 +169,7 @@ public class DirectoryListingService extends ServiceImp
 	 * @param directoryPath
 	 *            The directory path parameter.
 	 */
-  public void setDirectoryPath(final String directoryPath)
+	public void setDirectoryPath(final String directoryPath)
 	{
 		this.directoryPath = directoryPath;
 	}
@@ -179,7 +179,7 @@ public class DirectoryListingService extends ServiceImp
 	 *
 	 * @return The metadata key parameter.
 	 */
-  public String getMetadataKey()
+	public String getMetadataKey()
 	{
 		return metadataKey;
 	}
@@ -190,7 +190,7 @@ public class DirectoryListingService extends ServiceImp
 	 * @param metadataKey
 	 *            The metadata key parameter.
 	 */
-  public void setMetadataKey(String metadataKey)
+	public void setMetadataKey(String metadataKey)
 	{
 		this.metadataKey = metadataKey;
 	}
@@ -202,7 +202,7 @@ public class DirectoryListingService extends ServiceImp
 	 */
 	protected boolean debugMode()
 	{
-    return getDebugMode() != null ? getDebugMode().booleanValue() : false;
+		return getDebugMode() != null ? getDebugMode().booleanValue() : false;
 	}
 
 	/**
@@ -223,7 +223,7 @@ public class DirectoryListingService extends ServiceImp
 	 */
 	public void setDebugMode(final Boolean debugMode)
 	{
-    this.debugMode = debugMode;
+		this.debugMode = debugMode;
 	}
 
 	/**

@@ -28,18 +28,19 @@ public class ZipService extends ServiceImp
 	/**
 	 * The directory to zip.
 	 */
-  @InputFieldHint(expression = true)
-  @NotBlank
+	@InputFieldHint(expression = true)
+	@NotBlank
 	private String directoryPath;
 
-  public ZipService() {
+	public ZipService()
+	{
+		/* empty, default constructor */
+	}
 
-  }
-
-  public ZipService(String path) {
-    this();
-    setDirectoryPath(path);
-  }
+	public ZipService(final String path)
+	{
+		setDirectoryPath(path);
+	}
 
 	/**
 	 * Get the directory to zip.
@@ -59,7 +60,7 @@ public class ZipService extends ServiceImp
 	 */
 	public void setDirectoryPath(final String directoryPath)
 	{
-    this.directoryPath = Args.notBlank(directoryPath, "directoryPath");
+		this.directoryPath = Args.notBlank(directoryPath, "directoryPath");
 	}
 
 	@Override
