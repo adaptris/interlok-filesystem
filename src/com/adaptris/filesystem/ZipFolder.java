@@ -192,9 +192,3 @@ public class ZipFolder
 		}
 	}
 }
-}
-);
-			}
-		}
-	}
-}
