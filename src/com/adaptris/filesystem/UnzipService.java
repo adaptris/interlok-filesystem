@@ -3,7 +3,8 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
@@ -23,7 +24,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("unzip-service")
 public class UnzipService extends ServiceImp
 {
-	private static final Logger LOGGER = Logger.getLogger(UnzipService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UnzipService.class);
 
 	@Override
 	public void doService(final AdaptrisMessage msg) throws ServiceException

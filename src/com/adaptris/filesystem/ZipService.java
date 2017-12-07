@@ -3,7 +3,8 @@ package com.adaptris.filesystem;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -27,7 +28,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("zip-service")
 public class ZipService extends ServiceImp
 {
-	private static final Logger LOGGER = Logger.getLogger(ZipService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ZipService.class);
 
 	/**
 	 * The directory to zip.
