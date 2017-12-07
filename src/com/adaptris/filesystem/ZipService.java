@@ -3,6 +3,8 @@ package com.adaptris.filesystem;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.apache.log4j.Logger;
+
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.adaptris.annotation.AdapterComponent;
@@ -25,6 +27,8 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("zip-service")
 public class ZipService extends ServiceImp
 {
+	private static final Logger LOGGER = Logger.getLogger(ZipService.class);
+
 	/**
 	 * The directory to zip.
 	 */
@@ -61,12 +65,15 @@ public class ZipService extends ServiceImp
 	public void setDirectoryPath(final String directoryPath)
 	{
 		this.directoryPath = Args.notBlank(directoryPath, "directoryPath");
+		LOGGER.debug("Setting directory path to " + this.directoryPath);
 	}
 
 	@Override
 	public void doService(final AdaptrisMessage msg) throws ServiceException
 	{
-		final ZipFolder zipFolder = new ZipFolder(msg.resolve(directoryPath));
+		String p = msg.resolve(directoryPath);
+		LOGGER.info("Target folder : " + p);
+		final ZipFolder zipFolder = new ZipFolder(p);
 		msg.setContent(null, null);
 		try (final OutputStream outputStream = msg.getOutputStream())
 		{
@@ -76,6 +83,7 @@ public class ZipService extends ServiceImp
 		}
 		catch (final IOException e)
 		{
+			LOGGER.error(e.getMessage());
 			throw new ServiceException(e);
 		}
 	}

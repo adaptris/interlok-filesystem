@@ -3,6 +3,8 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
+
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.core.AdaptrisMessage;
@@ -21,10 +23,13 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("unzip-service")
 public class UnzipService extends ServiceImp
 {
+	private static final Logger LOGGER = Logger.getLogger(UnzipService.class);
+
 	@Override
 	public void doService(final AdaptrisMessage msg) throws ServiceException
 	{
 		final File messageTempDirectory = new File(System.getProperty("java.io.tmpdir"), msg.getUniqueId());
+		LOGGER.info("Extracting to temporary directory : " + messageTempDirectory);
 		if (messageTempDirectory.exists())
 		{
 			throw new ServiceException(messageTempDirectory + " already exists.");
@@ -36,10 +41,12 @@ public class UnzipService extends ServiceImp
 		try
 		{
 			final String unzippedDirPath = zipFolder.unzip(msg.getInputStream());
+			LOGGER.info("Unzipped directory path : " + unzippedDirPath);
 			msg.setContent(unzippedDirPath, msg.getContentEncoding());
 		}
 		catch (final IOException e)
 		{
+			LOGGER.error(e.getMessage());
 			throw new ServiceException(e);
 		}
 	}
