@@ -25,8 +25,8 @@
   <publications>
     <artifact name="interlok-filesystem" type="jar" ext="jar"/>
     <artifact name="interlok-filesystem" type="pom" ext="pom"/>
-    <artifact name="interlok-filesystem-javadoc" type="javadoc" ext="zip" conf="javadoc"/>
-    <artifact name="interlok-filesystem-examples" type="examples" ext="zip" conf="examples"/>
+
+
     <artifact type="javadoc" ext="jar" conf="javadoc" m:classifier="javadoc"/>
      <artifact type="examples" ext="jar" conf="examples" m:classifier="examples"/>
   </publications>
