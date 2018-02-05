@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Zip or unzip a file or directory.
- * 
+ *
  * @author andersonam
  */
 public class ZipFolder
@@ -40,20 +40,21 @@ public class ZipFolder
 
 	/**
 	 * Create a new instance, with the given folder as either the folder to zip from to to.
-	 * 
+	 *
 	 * @param folder
 	 *            The source/target folder.
 	 */
 	public ZipFolder(final String folder)
 	{
 		this.folder = folder;
+		LOG.debug("ZipFolder(" + folder + ")");
 	}
 
 	/**
 	 * Zip the folder and return the compressed data.
-	 * 
+	 *
 	 * @return The compressed data.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Thrown if the source folder doesn't exist or there is a problem during compression.
 	 */
@@ -104,10 +105,10 @@ public class ZipFolder
 
 	/**
 	 * Unzip the data to the target directory.
-	 * 
+	 *
 	 * @param data
 	 *            The compressed data to unzip.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Thrown if there is problem during decompression
 	 */
@@ -121,10 +122,10 @@ public class ZipFolder
 
 	/**
 	 * Unzip the data to the target directory.
-	 * 
+	 *
 	 * @param zipStream
 	 *            The compressed data to unzip.
-	 * 
+	 *
 	 * @throws IOException
 	 *             Thrown if there is problem during decompression
 	 */
@@ -147,6 +148,7 @@ public class ZipFolder
 				final String fileName = ze.getName();
 
 				final File file = new File(folder, fileName);
+				LOG.debug("Extracting " + fileName + " to " + file.getAbsolutePath());
 				// create directories for sub directories in zip
 				new File(file.getParent()).mkdirs();
 
@@ -170,7 +172,7 @@ public class ZipFolder
 
 	/**
 	 * Append a file or directory hierarchy to the zip index.
-	 * 
+	 *
 	 * @param file
 	 *            The file/directory to add to the zip index.
 	 */
@@ -178,6 +180,7 @@ public class ZipFolder
 	{
 		if (file.isFile())
 		{
+			LOG.trace("Found file " + file.getAbsolutePath());
 			fileList.add(file.toString().substring(folder.length() + 1, file.toString().length()));
 		}
 		if (file.isDirectory())
