@@ -1,11 +1,10 @@
 package com.adaptris.filesystem;
 
 import java.io.File;
-import java.text.NumberFormat;
-import java.util.Locale;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import org.hibernate.validator.constraints.NotBlank;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,14 +21,14 @@ import com.adaptris.interlok.InterlokException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
- * List the contents of a directory.
+ * Stat a file in a directory.
  *
- * @config directory-listing-service
+ * @config directory-entity-service
  */
 @AdapterComponent
-@ComponentProfile(summary = "List the contents of a directory", tag = "service,list,directory,ls")
-@XStreamAlias("directory-listing-service")
-public class DirectoryListingService extends ServiceImp
+@ComponentProfile(summary = "Get various file metadata info", tag = "service,directory,stat,file")
+@XStreamAlias("directory-entity-service")
+public class DirectoryEntityService extends ServiceImp
 {
 	/**
 	 * Whether debug mode is enabled.
@@ -39,7 +38,7 @@ public class DirectoryListingService extends ServiceImp
 	private Boolean debugMode;
 
 	/**
-	 * The metadata key to export file listing data to.
+	 * The metadata key to export file data to.
 	 */
 	@NotBlank
 	private String metadataKey;
@@ -63,29 +62,24 @@ public class DirectoryListingService extends ServiceImp
 			throw new ServiceException("Missing Required Parameters");
 		}
 
-		NumberFormat.getNumberInstance(Locale.UK);
 		try
 		{
 			final String path = message.resolve(getDirectoryPath());
-			final File directory = new File(path);
-			log.trace("ls: {} ", directory.getAbsolutePath());
-			if (directory.exists() && directory.isDirectory())
+			final File file = new File(path);
+			if (!file.exists())
 			{
-				final JSONArray entities = new JSONArray();
-				for (final File file : directory.listFiles())
-				{
-					log.trace("Found file: {}", file.getName());
-					
-					DirectoryEntity entity = new DirectoryEntity(file);
-					entities.put(new JSONObject(entity.toJSON()));
-				}
-				setOutput(message, entities.toString());
+				throw new FileNotFoundException("File not found : " + path);
 			}
-			else
-			{
-				log.warn("Directory does not exist: {}", path);
-				setOutput(message, "[]");
-			}
+			log.trace("Found file: {} ", file.getAbsolutePath());
+
+			final DirectoryEntity entity = new DirectoryEntity(file);
+			final JSONObject json = new JSONObject(entity.toJSON());
+			setOutput(message, json.toString());
+		}
+		catch (final IOException e)
+		{
+			log.error(e.getMessage());
+			throw new ServiceException(e);
 		}
 		catch (final JSONException e)
 		{
@@ -223,24 +217,5 @@ public class DirectoryListingService extends ServiceImp
 	public void setDebugMode(final Boolean debugMode)
 	{
 		this.debugMode = debugMode;
-	}
-
-	/**
-	 * Get a human readable file size.
-	 *
-	 * @param bytes
-	 *            The file size in bytes.
-	 *
-	 * @return A String representation of the file size.
-	 */
-	private static String humanReadableByteCount(final long bytes)
-	{
-		final int k = 1024;
-		if (bytes < k)
-		{
-			return bytes + " B";
-		}
-		final int exp = (int)(Math.log(bytes) / Math.log(k));
-		return String.format("%.1f %ciB", bytes / Math.pow(k, exp), "KMGTPE".charAt(exp - 1));
 	}
 }
