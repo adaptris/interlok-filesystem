@@ -18,3 +18,4 @@ build/
 testoutput/
 config/sharedmem.properties
 ivy.jar
+unit-tests.properties
