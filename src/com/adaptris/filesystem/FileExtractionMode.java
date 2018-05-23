@@ -4,6 +4,7 @@ import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.MessageDrivenDestination;
 import com.adaptris.core.util.ExceptionHelper;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 /**
  * @author mwarman
  */
+@XStreamAlias("file-extraction-mode")
 public class FileExtractionMode implements ExtractionMode {
 
   private transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
