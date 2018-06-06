@@ -77,7 +77,7 @@ public class ZipServiceTest extends ServiceCase
 	public void testZipDirectoryServiceSingleFile() throws Exception
 	{
 		final AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage();
-		msg.addMetadata("zip-path", "build.xml");
+		msg.addMetadata("zip-path", "build.gradle");
 		final ZipService zip = new ZipService();
 		zip.setDirectoryPath("%message{zip-path}");
 		execute(zip, msg);
@@ -91,7 +91,7 @@ public class ZipServiceTest extends ServiceCase
 		final File dir = new File(unzippedPath);
 		dir.deleteOnExit();
 		assertTrue(dir.isDirectory());
-		final File file = new File(dir, "build.xml");
+		final File file = new File(dir, "build.gradle");
 		file.deleteOnExit();
 		assertTrue(file.exists());
 	}
@@ -100,7 +100,7 @@ public class ZipServiceTest extends ServiceCase
 	public void testZipDirectoryServiceSingleFileAbsolutePath() throws Exception
 	{
 		final AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage();
-		msg.addMetadata("zip-path", new File("build.xml").getAbsolutePath());
+		msg.addMetadata("zip-path", new File("build.gradle").getAbsolutePath());
 		final ZipService zip = new ZipService();
 		zip.setDirectoryPath("%message{zip-path}");
 		execute(zip, msg);
@@ -114,7 +114,7 @@ public class ZipServiceTest extends ServiceCase
 		final File dir = new File(unzippedPath);
 		dir.deleteOnExit();
 		assertTrue(dir.isDirectory());
-		final File file = new File(dir, "build.xml");
+		final File file = new File(dir, "build.gradle");
 		file.deleteOnExit();
 		assertTrue(file.exists());
 	}

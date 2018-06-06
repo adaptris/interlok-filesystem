@@ -37,7 +37,7 @@ public class ZipFolderTest
 	@Test
 	public void test1() throws Exception
 	{
-		ZipFolder zf = new ZipFolder("build.xml");
+		ZipFolder zf = new ZipFolder("build.gradle");
 		final byte[] z = zf.zip();
 
 		final File zip = new File(tmpDir, "build.zip");
@@ -56,7 +56,7 @@ public class ZipFolderTest
 	@Test
 	public void test2() throws Exception
 	{
-		ZipFolder zf = new ZipFolder(new File("build.xml").getAbsolutePath());
+		ZipFolder zf = new ZipFolder(new File("build.gradle").getAbsolutePath());
 		final byte[] z = zf.zip();
 
 		final File zip = new File(tmpDir, "build.zip");
