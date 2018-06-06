@@ -71,6 +71,8 @@ dependencies {
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
   compile ("org.json:json:20160810")
 
+  annotationProcessor ("com.adaptris:interlok-common:$adpCoreVersion") {changing= true}
+
   testCompile ('junit:junit:4.12')
   testCompile ("com.adaptris:adp-stubs:$adpCoreVersion") { changing= true}
   testCompile ("com.adaptris:adp-licensing-stub:$adpCoreVersion") { changing= true}
