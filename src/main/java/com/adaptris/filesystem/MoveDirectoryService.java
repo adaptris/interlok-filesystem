@@ -34,6 +34,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("move-directory-service")
 @AdapterComponent
 @ComponentProfile(summary = "Will move a directory and it's contents to the configured \"new-directory-path\"", tag = "FS, FileSystem")
+@Deprecated
 public class MoveDirectoryService extends ServiceImp {
   
   @NotNull
