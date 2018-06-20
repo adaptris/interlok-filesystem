@@ -103,6 +103,8 @@ task generateVersion {
     versionFile.getParentFile().mkdirs()
     ant.propertyfile(file: versionFile) {
       entry(key: 'component.name', value: componentName)
+      entry(key: 'groupId', value: "com.adaptris")
+      entry(key: 'artifactId', value: project.name)
       entry(key: 'build.version', value: releaseVersion)
       entry(key: 'build.date', value: new Date().format('yyyy-MM-dd'))
     }
@@ -161,6 +163,8 @@ publishing {
         asNode().appendNode("description", "Perform filesystem operations within Interlok")
         def properties = asNode().appendNode("properties")
         properties.appendNode("target", "3.6.6+")
+        properties.appendNode("tags", "filesystem")
+        properties.appendNode("license", "false")
       }
     }
   }
