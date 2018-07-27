@@ -63,7 +63,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile ("org.apache.commons:commons-compress:1.17")
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("org.json:json:20160810")
+  compile ("org.json:json:20180130")
 
   annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
 
