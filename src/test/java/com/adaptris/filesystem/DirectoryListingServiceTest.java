@@ -209,8 +209,8 @@ public class DirectoryListingServiceTest extends ServiceCase
 	protected DirectoryListingService retrieveObjectForSampleConfig()
 	{
 		final DirectoryListingService service = new DirectoryListingService();
-		service.setDirectoryPath("/opt/data/files");
-		service.setMetadataKey(METADATA_KEY);
+		service.setDirectory(new ConstantDataInputParameter("/opt/data/files"));
+		service.setOutput(new MetadataDataOutputParameter(METADATA_KEY));
 		return service;
 	}
 }
