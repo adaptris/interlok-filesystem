@@ -17,6 +17,8 @@
 package com.adaptris.filesystem;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +31,7 @@ import com.adaptris.core.common.MetadataDataInputParameter;
 import com.adaptris.core.common.MetadataDataOutputParameter;
 import com.adaptris.core.common.StringPayloadDataOutputParameter;
 import com.adaptris.core.services.metadata.DateFormatBuilder;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
 
 import com.adaptris.core.AdaptrisMessage;
@@ -38,9 +41,9 @@ import com.adaptris.core.ServiceCase;
 public class DirectoryListingServiceTest extends ServiceCase
 {
 	private static final String METADATA_KEY = "service-test";
-	private static  final List<String> DEFAULT_PROVIDER_EXPECTED_FILES = Arrays.asList("archive.tar.gz", "unit-tests.properties", "recursive");
-	private static  final List<String> COMMONS_IO_PROVIDER_EXPECTED_FILES = Arrays.asList("archive.tar.gz", "unit-tests.properties");
-	private static  final List<String> COMMONS_IO_PROVIDER_EXPECTED_FILES_RECURSIVE = Arrays.asList("archive.tar.gz", "unit-tests.properties", "text.xml");
+	private static  final List<String> DEFAULT_PROVIDER_EXPECTED_FILES = Arrays.asList("text1.xml", "text2.xml", "recursive");
+	private static  final List<String> COMMONS_IO_PROVIDER_EXPECTED_FILES = Arrays.asList("text1.xml", "text2.xml");
+	private static  final List<String> COMMONS_IO_PROVIDER_EXPECTED_FILES_RECURSIVE = Arrays.asList("text1.xml", "text2.xml", "text3.xml");
 	private String directoryPath;
 
 	public DirectoryListingServiceTest(final String testName)
@@ -51,7 +54,12 @@ public class DirectoryListingServiceTest extends ServiceCase
 	@Override
 	protected void setUp() throws Exception
 	{
-		directoryPath = new File(DirectoryListingServiceTest.class.getClassLoader().getResource(".").getFile()).getAbsolutePath();
+		directoryPath = createTempDirectory().getAbsolutePath();
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		cleanUpTempDirectory(new File(directoryPath));
 	}
 
 	@Test
@@ -203,6 +211,32 @@ public class DirectoryListingServiceTest extends ServiceCase
 		{
 			assertTrue(ls.contains(file));
 		}
+	}
+
+	public File createTempDirectory() throws IOException {
+		File tempDir = File.createTempFile(DirectoryListingProvider.class.getSimpleName(), "", null);
+		tempDir.delete();
+		if (!tempDir.exists())
+		{
+			tempDir.mkdir();
+		}
+		new FileOutputStream(new File(tempDir, "text1.xml")).close();
+		new FileOutputStream(new File(tempDir, "text2.xml")).close();
+		File recursive = new File(tempDir, "recursive");
+		recursive.mkdir();
+		new FileOutputStream(new File(recursive, "text3.xml")).close();
+		return tempDir;
+	}
+
+	public void cleanUpTempDirectory(File tempDir)
+	{
+		for (final File f : FileUtils.listFiles(tempDir, null, true))
+		{
+			f.delete();
+		}
+		File recursive = new File(tempDir, "recursive");
+		recursive.delete();
+		tempDir.delete();
 	}
 
 	@Override
