@@ -17,25 +17,36 @@
 package com.adaptris.filesystem;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
+import com.adaptris.annotation.*;
+import com.adaptris.core.common.ConstantDataInputParameter;
+import com.adaptris.core.common.MetadataDataOutputParameter;
+import com.adaptris.core.common.StringPayloadDataOutputParameter;
+import com.adaptris.core.fs.enhanced.FileSorter;
+import com.adaptris.core.fs.enhanced.NoSorting;
+import com.adaptris.core.services.metadata.DateFormatBuilder;
+import com.adaptris.core.util.Args;
+import com.adaptris.interlok.config.DataInputParameter;
+import com.adaptris.interlok.config.DataOutputParameter;
 import org.hibernate.validator.constraints.NotBlank;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.adaptris.annotation.AdapterComponent;
-import com.adaptris.annotation.AdvancedConfig;
-import com.adaptris.annotation.ComponentProfile;
-import com.adaptris.annotation.InputFieldDefault;
-import com.adaptris.annotation.InputFieldHint;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
 import com.adaptris.interlok.InterlokException;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * List the contents of a directory.
@@ -47,25 +58,49 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("directory-listing-service")
 public class DirectoryListingService extends ServiceImp
 {
-	/**
-	 * Whether debug mode is enabled.
-	 */
-	@InputFieldDefault(value = "false")
-	@AdvancedConfig
-	private Boolean debugMode;
 
 	/**
 	 * The metadata key to export file listing data to.
 	 */
-	@NotBlank
+	@Deprecated
 	private String metadataKey;
 
 	/**
 	 * The folder to get a directory listing of.
 	 */
-	@NotBlank
 	@InputFieldHint(expression = true)
+	@Deprecated
 	private String directoryPath;
+
+	@NotNull
+	@Valid
+	@AutoPopulated
+	private DirectoryListingProvider directoryListingProvider;
+
+	@NotNull
+	@Valid
+	private DataInputParameter<String> directory;
+
+	@NotNull
+	@Valid
+	private DataOutputParameter<String> output;
+
+	@NotNull
+	@Valid
+	@AutoPopulated
+	@AdvancedConfig
+	private FileSorter fileSorter;
+
+	@Valid
+	@AutoPopulated
+	@AdvancedConfig
+	private DateFormatBuilder dateFormatBuilder;
+
+	public DirectoryListingService(){
+		setFileSorter(new NoSorting());
+		setDirectoryListingProvider(new DirectoryListingProviderDefault());
+		setDateFormatBuilder(new DateFormatBuilder(DateFormatBuilder.DEFAULT_DATE_FORMAT));
+	}
 
 	/**
 	 * {@inheritDoc}.
@@ -73,68 +108,36 @@ public class DirectoryListingService extends ServiceImp
 	@Override
 	public void doService(final AdaptrisMessage message) throws ServiceException
 	{
-		if (directoryPath == null)
-		{
-			log.error("Directory path is NULL, this service ({}) will not execute.", getUniqueId());
-			throw new ServiceException("Missing Required Parameters");
-		}
-
 		NumberFormat.getNumberInstance(Locale.UK);
 		try
 		{
-			final String path = message.resolve(getDirectoryPath());
+			final String path = getDirectory().extract(message);
 			final File directory = new File(path);
 			log.trace("ls: {} ", directory.getAbsolutePath());
+			DateFormatBuilder.DateFormatter dateFormatter = getDateFormatBuilder().build(message);
 			if (directory.exists() && directory.isDirectory())
 			{
 				final JSONArray entities = new JSONArray();
-				for (final File file : directory.listFiles())
+				final List<File> files = getFileSorter().sort(getDirectoryListingProvider().getFiles(directory));
+				for (final File file : files)
 				{
 					log.trace("Found file: {}", file.getName());
 					
 					DirectoryEntity entity = new DirectoryEntity(file);
-					entities.put(new JSONObject(entity.toJSON()));
+					entities.put(entity.toJSONObject(dateFormatter));
 				}
-				setOutput(message, entities.toString());
+				getOutput().insert(entities.toString(), message);
 			}
 			else
 			{
-				log.warn("Directory does not exist: {}", path);
-				setOutput(message, "[]");
+				log.trace("Directory does not exist: {}", path);
+				getOutput().insert("[]", message);
 			}
 		}
-		catch (final JSONException e)
+		catch (final JSONException | InterlokException e)
 		{
 			log.error(e.getMessage());
 			throw new ServiceException(e);
-		}
-		catch (final InterlokException e)
-		{
-			log.error(e.getMessage());
-			throw new ServiceException(e);
-		}
-	}
-
-	/**
-	 * Depending on whether the metadata key is set, put the directory listing output in the correct place (metadata or payload).
-	 * 
-	 * @param message
-	 *            The message.
-	 * @param output
-	 *            The directory listing.
-	 * 
-	 * @throws InterlokException
-	 *             Thrown if there is a problem with the metadata key.
-	 */
-	private void setOutput(final AdaptrisMessage message, final String output) throws InterlokException
-	{
-		if (metadataKey == null)
-		{
-			message.setContent(output, message.getContentEncoding());
-		}
-		else
-		{
-			message.addMessageHeader(metadataKey, output);
 		}
 	}
 
@@ -162,10 +165,29 @@ public class DirectoryListingService extends ServiceImp
 	@Override
 	protected void initService() throws CoreException
 	{
-		if (directoryPath == null)
+		if (getDirectoryPath() != null)
 		{
-			log.warn("Directory path is NULL, this service ({}) will not execute.", getUniqueId());
+			log.warn("directoryPath is deprecated use directory instead.");
+			if(getDirectory() != null) {
+				setDirectory(new ConstantDataInputParameter(getDirectoryPath()));
+			} else {
+				log.warn("directory and directoryPath set using directory");
+			}
 		}
+		if(getOutput() == null){
+			if(getMetadataKey() != null) {
+				log.warn("relying on metadataKey is deprecated use output instead.");
+				setOutput(new MetadataDataOutputParameter(getMetadataKey()));
+			} else {
+				log.warn("relying on metadataKey is deprecated use output instead.");
+				setOutput(new StringPayloadDataOutputParameter());
+			}
+		} else {
+			if(getMetadataKey() != null) {
+				log.warn("output and metadataKey set using output");
+			}
+		}
+
 	}
 
 	/**
@@ -173,6 +195,7 @@ public class DirectoryListingService extends ServiceImp
 	 *
 	 * @return The directory path parameter.
 	 */
+	@Deprecated
 	public String getDirectoryPath()
 	{
 		return directoryPath;
@@ -194,6 +217,7 @@ public class DirectoryListingService extends ServiceImp
 	 *
 	 * @return The metadata key parameter.
 	 */
+	@Deprecated
 	public String getMetadataKey()
 	{
 		return metadataKey;
@@ -210,53 +234,45 @@ public class DirectoryListingService extends ServiceImp
 		this.metadataKey = metadataKey;
 	}
 
-	/**
-	 * Check whether debug mode is enabled.
-	 *
-	 * @return True if debug mode is enabled.
-	 */
-	protected boolean debugMode()
-	{
-		return getDebugMode() != null ? getDebugMode().booleanValue() : false;
+	public DataInputParameter<String> getDirectory() {
+		return directory;
 	}
 
-	/**
-	 * Check whether debug mode is enabled.
-	 *
-	 * @return True if debug mode is enabled.
-	 */
-	public Boolean getDebugMode()
-	{
-		return debugMode;
+	public void setDirectory(DataInputParameter<String> directory) {
+		this.directory = Args.notNull(directory, "directory");
 	}
 
-	/**
-	 * Enable/Disable debug mode.
-	 *
-	 * @param debugMode
-	 *            Whether debug mode should be enabled.
-	 */
-	public void setDebugMode(final Boolean debugMode)
-	{
-		this.debugMode = debugMode;
+	public DataOutputParameter<String> getOutput() {
+		return output;
 	}
 
-	/**
-	 * Get a human readable file size.
-	 *
-	 * @param bytes
-	 *            The file size in bytes.
-	 *
-	 * @return A String representation of the file size.
-	 */
-	private static String humanReadableByteCount(final long bytes)
-	{
-		final int k = 1024;
-		if (bytes < k)
-		{
-			return bytes + " B";
-		}
-		final int exp = (int)(Math.log(bytes) / Math.log(k));
-		return String.format("%.1f %ciB", bytes / Math.pow(k, exp), "KMGTPE".charAt(exp - 1));
+	public void setOutput(DataOutputParameter<String> output) {
+		this.output = Args.notNull(output, "output");
+	}
+
+	public DirectoryListingProvider getDirectoryListingProvider() {
+		return directoryListingProvider;
+	}
+
+	public void setDirectoryListingProvider(DirectoryListingProvider directoryListingProvider) {
+		this.directoryListingProvider = directoryListingProvider;
+	}
+
+	public FileSorter getFileSorter() {
+		return fileSorter;
+	}
+
+	public void setFileSorter(FileSorter fileSorter) {
+		this.fileSorter = fileSorter;
+	}
+
+	public DateFormatBuilder getDateFormatBuilder() {
+		return dateFormatBuilder;
+	}
+
+	public void setDateFormatBuilder(DateFormatBuilder dateFormatBuilder) {
+		this.dateFormatBuilder = dateFormatBuilder;
 	}
 }
+
+
