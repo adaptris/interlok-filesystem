@@ -23,10 +23,16 @@ import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
+import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.util.Args;
+import com.adaptris.core.util.ExceptionHelper;
+import com.adaptris.interlok.InterlokException;
+import com.adaptris.interlok.config.DataInputParameter;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.hibernate.validator.constraints.NotBlank;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 
 /**
@@ -40,21 +46,30 @@ public class DeleteDirectoryService  extends ServiceImp {
   /**
    * The folder to delete.
    */
-  @NotBlank
   @InputFieldHint(expression = true)
+  @Deprecated
   private String directoryPath;
+
+  @NotNull
+  @Valid
+  private DataInputParameter<String> path;
 
   @Override
   public void doService(AdaptrisMessage msg) throws ServiceException {
-    File directory = new File(msg.resolve(getDirectoryPath()));
-    if(directory.listFiles() != null) {
-      for (final File f : directory.listFiles()) {
-        f.delete();
+    try {
+      File directory = new File(getPath().extract(msg));
+      if (directory.listFiles() != null) {
+        for (final File f : directory.listFiles()) {
+          f.delete();
+        }
       }
+      directory.delete();
+    } catch (InterlokException e) {
+      throw ExceptionHelper.wrapServiceException(e);
     }
-    directory.delete();
   }
 
+  @Deprecated
   public String getDirectoryPath() {
     return directoryPath;
   }
@@ -68,9 +83,29 @@ public class DeleteDirectoryService  extends ServiceImp {
     return this;
   }
 
+  public DataInputParameter<String> getPath() {
+    return path;
+  }
+
+  public void setPath(DataInputParameter<String> path) {
+    this.path = Args.notNull(path, "path");
+  }
+
+  public DeleteDirectoryService withPath(DataInputParameter<String> path){
+    setPath(path);
+    return this;
+  }
+
   @Override
   protected void initService() throws CoreException {
-
+    if(getDirectoryPath() != null){
+      log.warn("directoryPath is deprecated use path.");
+      if(getPath() == null){
+        setPath(new ConstantDataInputParameter(getDirectoryPath()));
+      } else {
+        log.warn("directoryPath ignored as path is set");
+      }
+    }
   }
 
   @Override
