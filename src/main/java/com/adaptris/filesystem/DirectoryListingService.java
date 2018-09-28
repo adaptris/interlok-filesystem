@@ -16,14 +16,11 @@
 
 package com.adaptris.filesystem;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import com.adaptris.annotation.*;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.CoreException;
+import com.adaptris.core.ServiceException;
+import com.adaptris.core.ServiceImp;
 import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.common.MetadataDataOutputParameter;
 import com.adaptris.core.common.StringPayloadDataOutputParameter;
@@ -31,22 +28,19 @@ import com.adaptris.core.fs.enhanced.FileSorter;
 import com.adaptris.core.fs.enhanced.NoSorting;
 import com.adaptris.core.services.metadata.DateFormatBuilder;
 import com.adaptris.core.util.Args;
+import com.adaptris.interlok.InterlokException;
 import com.adaptris.interlok.config.DataInputParameter;
 import com.adaptris.interlok.config.DataOutputParameter;
-import org.hibernate.validator.constraints.NotBlank;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.CoreException;
-import com.adaptris.core.ServiceException;
-import com.adaptris.core.ServiceImp;
-import com.adaptris.interlok.InterlokException;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.io.File;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * List the contents of a directory.
