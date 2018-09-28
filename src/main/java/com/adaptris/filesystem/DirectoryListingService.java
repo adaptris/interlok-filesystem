@@ -168,7 +168,7 @@ public class DirectoryListingService extends ServiceImp
 		if (getDirectoryPath() != null)
 		{
 			log.warn("directoryPath is deprecated use directory instead.");
-			if(getDirectory() != null) {
+			if(getDirectory() == null) {
 				setDirectory(new ConstantDataInputParameter(getDirectoryPath()));
 			} else {
 				log.warn("directory and directoryPath set using directory");
