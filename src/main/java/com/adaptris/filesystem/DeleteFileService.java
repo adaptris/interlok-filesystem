@@ -35,9 +35,9 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 
 /**
- * @config odin-delete-file-service
+ * @config delete-file-service
  */
-@XStreamAlias("odin-delete-file-service")
+@XStreamAlias("delete-file-service")
 @AdapterComponent
 @ComponentProfile(summary = "Will delete a file", tag = "FS, FileSystem")
 public class DeleteFileService extends ServiceImp {
