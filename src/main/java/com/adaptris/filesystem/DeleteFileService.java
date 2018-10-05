@@ -23,7 +23,6 @@ import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
-import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.util.Args;
 import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.interlok.InterlokException;
@@ -36,51 +35,37 @@ import javax.validation.constraints.NotNull;
 import java.io.File;
 
 /**
- * @config delete-directory-service
+ * @config delete-file-service
  */
-@XStreamAlias("delete-directory-service")
+@XStreamAlias("delete-file-service")
 @AdapterComponent
-@ComponentProfile(summary = "Will delete directory and its contents.", tag = "FS, FileSystem")
-public class DeleteDirectoryService  extends ServiceImp {
+@ComponentProfile(summary = "Will delete a file", tag = "FS, FileSystem")
+public class DeleteFileService extends ServiceImp {
 
   /**
    * The folder to delete.
    */
-  @InputFieldHint(expression = true)
-  @Deprecated
-  private String directoryPath;
-
   @NotNull
   @Valid
   private DataInputParameter<String> path;
 
+  private Boolean deleteEmptyParent;
+
   @Override
   public void doService(AdaptrisMessage msg) throws ServiceException {
     try {
-      File directory = new File(getPath().extract(msg));
-      if (directory.listFiles() != null) {
-        for (final File f : directory.listFiles()) {
-          f.delete();
+      File file = new File(getPath().extract(msg));
+      if (file.delete()) {
+        File parent = file.getParentFile();
+        if (deleteEmptyParent() && parent.isDirectory()) {
+          if (parent.list().length == 0) {
+            parent.delete();
+          }
         }
       }
-      directory.delete();
     } catch (InterlokException e) {
       throw ExceptionHelper.wrapServiceException(e);
     }
-  }
-
-  @Deprecated
-  public String getDirectoryPath() {
-    return directoryPath;
-  }
-
-  public void setDirectoryPath(String directoryPath) {
-    this.directoryPath = Args.notEmpty(directoryPath, "directoryPath");
-  }
-
-  public DeleteDirectoryService withDirectoryPath(String directoryPath){
-    setDirectoryPath(directoryPath);
-    return this;
   }
 
   public DataInputParameter<String> getPath() {
@@ -91,21 +76,26 @@ public class DeleteDirectoryService  extends ServiceImp {
     this.path = Args.notNull(path, "path");
   }
 
-  public DeleteDirectoryService withPath(DataInputParameter<String> path){
+  public Boolean getDeleteEmptyParent() {
+    return deleteEmptyParent;
+  }
+
+  public void setDeleteEmptyParent(Boolean deleteEmptyParent) {
+    this.deleteEmptyParent = deleteEmptyParent;
+  }
+
+  private boolean deleteEmptyParent(){
+    return getDeleteEmptyParent() != null ? getDeleteEmptyParent() : false;
+  }
+
+  public DeleteFileService withPath(DataInputParameter<String> path){
     setPath(path);
     return this;
   }
 
   @Override
   protected void initService() throws CoreException {
-    if(getDirectoryPath() != null){
-      log.warn("directoryPath is deprecated use path.");
-      if(getPath() == null){
-        setPath(new ConstantDataInputParameter(getDirectoryPath()));
-      } else {
-        log.warn("directoryPath ignored as path is set");
-      }
-    }
+
   }
 
   @Override

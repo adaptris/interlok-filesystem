@@ -61,9 +61,9 @@ configurations.all {
 dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  compile ("org.apache.commons:commons-compress:1.17")
+  compile ("org.apache.commons:commons-compress:1.18")
   compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("org.json:json:20180130")
+  compile ("org.json:json:20180813")
 
   annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
 
