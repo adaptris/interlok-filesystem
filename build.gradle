@@ -180,7 +180,7 @@ publishing {
 
       artifact javadocJar { classifier "javadoc" }
       artifact examplesJar { classifier "examples" }
-      artifact examplesJar { classifier "sources" }
+      artifact sourcesJar { classifier "sources" }
 
       pom.withXml {
         asNode().appendNode("name", componentName)
