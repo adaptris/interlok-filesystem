@@ -1,17 +1,32 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.apache.tools.ant.filters.*
+
+plugins {
+  id 'java'
+  id 'maven'
+  id 'maven-publish'
+  id 'jacoco'
+  // Manage optional dependencies in maven pom.
+  id 'nebula.optional-base' version '4.0.1'
+}
+
 ext {
   interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.8-SNAPSHOT'
   releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.8-SNAPSHOT'
-  mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : 'https://development.adaptris.net/nexus/content/repositories/snapshots'
+  nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://development.adaptris.net/nexus'
+  mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
+  javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
   repoUsername = project.hasProperty('repoUsername') ? project.getProperty('repoUsername') : 'unknown'
   repoPassword = project.hasProperty('repoPassword') ? project.getProperty('repoPassword') : 'unknown'
   defaultNexusRepo = project.hasProperty('defaultNexusRepo') ? project.getProperty('defaultNexusRepo') : 'https://repo1.maven.org/maven2/'
-  javadocsBaseUrl = "https://development.adaptris.net/nexus/content/sites/javadocs/com/adaptris"
   interlokJavadocs= project.hasProperty('interlokJavadocs') ? project.getProperty('interlokJavadocs') : javadocsBaseUrl + "/interlok-core/" + interlokCoreVersion
   interlokCommonJavadocs= project.hasProperty('interlokJavadocs') ? project.getProperty('interlokJavadocs') : javadocsBaseUrl + "/interlok-common/" + interlokCoreVersion
   componentName='Interlok File System'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.25'
+  log4j2Version = "2.9.1"
+  tikaVersion = "1.19.1"
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -22,11 +37,6 @@ if (JavaVersion.current().isJava8Compatible()) {
   }
 }
 
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'maven-publish'
-apply plugin: "jacoco"
-
 sourceCompatibility = 1.8
 group   = 'com.adaptris'
 version = releaseVersion
@@ -34,10 +44,11 @@ def versionDir = "$buildDir/version"
 
 // In this section you declare where to find the dependencies of your project
 repositories {
+  mavenCentral()
   maven { url "$defaultNexusRepo" }
-  maven { url "https://development.adaptris.net/nexus/content/groups/public" }
-  maven { url "https://development.adaptris.net/nexus/content/repositories/snapshots" }
-  maven { url "https://development.adaptris.net/nexus/content/repositories/releases" }
+  maven { url "$nexusBaseUrl/content/groups/public" }
+  maven { url "$nexusBaseUrl/content/repositories/snapshots" }
+  maven { url "$nexusBaseUrl/content/content/repositories/releases" }
 }
 
 
@@ -50,7 +61,8 @@ configurations {
   all*.exclude group: 'org.glassfish.hk2.external'
   all*.exclude group: 'xalan', module: 'xalan'
   all*.exclude group: 'net.sf.saxon', module: 'saxon'
-  all*.exclude group: 'org.codehaus.woodstox'
+  // don't exclude woodstox; as tika-parsers -> org.apache.cxf:cxf-rt-rs-client -> com.fasterxml.woodstox:woodstox-core
+  // all*.exclude group: 'org.codehaus.woodstox'
   all*.exclude group: 'org.eclipse.jetty.orbit', module: 'javax.mail.glassfish'
 }
 
@@ -61,19 +73,24 @@ configurations.all {
 dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  compile ("org.apache.commons:commons-compress:1.18")
-  compile ("org.slf4j:slf4j-api:$slf4jVersion")
-  compile ("org.json:json:20180813")
+  compile "org.apache.commons:commons-compress:1.18"
+  compile "org.slf4j:slf4j-api:$slf4jVersion"
+  compile "org.json:json:20180813"
+  compile "org.apache.tika:tika-core:$tikaVersion"
+  compile "org.apache.tika:tika-parsers:$tikaVersion", optional {
+
+  }
+  compile "com.fasterxml.woodstox:woodstox-core:5.1.0", optional
+  compile "org.codehaus.woodstox:stax2-api:4.1", optional
 
   annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
 
   testCompile ('junit:junit:4.12')
   testCompile ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true}
-  testCompile ("org.apache.logging.log4j:log4j-core:2.8.1")
-  testCompile ("org.apache.logging.log4j:log4j-1.2-api:2.8.1")
-  testCompile ("org.apache.logging.log4j:log4j-api:2.8.1")
+  testCompile ("org.apache.logging.log4j:log4j-core:$log4j2Version")
+  testCompile ("org.apache.logging.log4j:log4j-1.2-api:$log4j2Version")
+  testCompile ("org.apache.logging.log4j:log4j-api:$log4j2Version")
   testCompile ("org.mockito:mockito-all:1.10.19")
-
   javadoc("com.adaptris:interlok-core-apt:$interlokCoreVersion") { changing= true}
 
 }
@@ -124,7 +141,7 @@ javadoc {
 }
 
 jacoco {
-  toolVersion="0.8.0"
+  toolVersion="0.8.1"
 }
 
 jacocoTestReport {
@@ -134,7 +151,6 @@ jacocoTestReport {
     }
 }
 
-check.dependsOn jacocoTestReport
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
@@ -146,9 +162,15 @@ task examplesJar(type: Jar, dependsOn: test) {
   from new File(buildDir, '/examples')
 }
 
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
 artifacts {
   archives javadocJar
   archives examplesJar
+  archives sourcesJar
 }
 
 publishing {
@@ -158,6 +180,7 @@ publishing {
 
       artifact javadocJar { classifier "javadoc" }
       artifact examplesJar { classifier "examples" }
+      artifact examplesJar { classifier "sources" }
 
       pom.withXml {
         asNode().appendNode("name", componentName)
@@ -179,3 +202,5 @@ publishing {
     }
   }
 }
+
+check.dependsOn jacocoTestReport
