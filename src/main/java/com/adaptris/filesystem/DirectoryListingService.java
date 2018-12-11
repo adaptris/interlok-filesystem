@@ -66,7 +66,6 @@ public class DirectoryListingService extends ServiceImp
 	@Deprecated
 	private String directoryPath;
 
-	@NotNull
 	@Valid
 	@AutoPopulated
 	private DirectoryListingProvider directoryListingProvider;
