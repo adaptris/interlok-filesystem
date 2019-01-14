@@ -30,6 +30,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import static org.eclipse.jetty.util.IO.delete;
+
 /**
  * @author mwarman
  */
@@ -95,6 +97,12 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     assertEquals(Arrays.toString(payload), Arrays.toString(message.getPayload()));
     assertDirectory(directory);
     LifecycleHelper.stopAndClose(service);
+    for (File childFile : directory.listFiles()) {
+
+      if (childFile.isDirectory()) {
+        delete(childFile);
+      }
+    }
     cleanUpTempDirectory(directory);
   }
 
@@ -110,6 +118,12 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     assertEquals(Arrays.toString(payload), Arrays.toString(message.getPayload()));
     assertDirectory(directory);
     LifecycleHelper.stopAndClose(service);
+    for (File childFile : directory.listFiles()) {
+
+      if (childFile.isDirectory()) {
+        delete(childFile);
+      }
+    }
     cleanUpTempDirectory(directory);
   }
 
