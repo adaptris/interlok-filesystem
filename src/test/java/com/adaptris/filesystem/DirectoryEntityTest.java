@@ -40,7 +40,6 @@ public class DirectoryEntityTest {
         Date d = new java.util.Date();
 
         assertEquals(directoryEntity.getId(), directoryEntity.getDescription());
-        assertEquals(new Long(0), directoryEntity.getSize());
         assertTrue(directoryEntity.getAbsolutePath().contains(directoryEntity.getId()));
         assertEquals("Temp", directoryEntity.getParentDirectory());
         assertEquals(d.toString(), directoryEntity.getCreatedAt().toString());
