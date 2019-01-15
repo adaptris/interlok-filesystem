@@ -90,17 +90,17 @@ public class MoveDirectoryService extends ServiceImp {
     this.newDirectoryPath = newDirectoryPath;
   }
   
-  public static void main(String[] args) {
-    MoveDirectoryService moveDirectoryService = new MoveDirectoryService();
-    moveDirectoryService.setOriginalDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources");
-    moveDirectoryService.setNewDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources2");
-    
-    try {
-      moveDirectoryService.doService(DefaultMessageFactory.getDefaultInstance().newMessage());
-    } catch (ServiceException e) {
-      e.printStackTrace();
-    }
-    
-  }
+//  public static void main(String[] args) {
+//    MoveDirectoryService moveDirectoryService = new MoveDirectoryService();
+//    moveDirectoryService.setOriginalDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources");
+//    moveDirectoryService.setNewDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources2");
+//
+//    try {
+//      moveDirectoryService.doService(DefaultMessageFactory.getDefaultInstance().newMessage());
+//    } catch (ServiceException e) {
+//      e.printStackTrace();
+//    }
+//
+//  }
 
 }

@@ -2,10 +2,14 @@ package com.adaptris.filesystem;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
+import com.adaptris.core.ServiceException;
 import org.apache.commons.io.FileUtils;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,6 +20,9 @@ import static org.eclipse.jetty.util.IO.delete;
 import static org.junit.Assert.*;
 
   public class MoveDirectoryServiceTest {
+
+    @Rule
+    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testMoveDirectoryWithMoveDirectory() throws Exception {
@@ -62,6 +69,7 @@ import static org.junit.Assert.*;
       service.setOriginalDirectoryPath(file.getAbsolutePath());
       String originalDirPath = service.getOriginalDirectoryPath();
       String newDirPath = service.getNewDirectoryPath();
+
       service.doService(message);
 
       assertEquals("Should both have same parent dir", Paths.get(target).getParent(), Paths.get(source).getParent());
@@ -75,6 +83,10 @@ import static org.junit.Assert.*;
       assertEquals("Should not contain file1.txt","ERROR: File not found", searchDirectory(sourceDir).toString());
       assertEquals("Source should contain file1.txt","file1.txt", Paths.get(newDirPath).getFileName().toString());
       assertEquals("Should contain Hello World in output file", "Hello World", new String(Files.readAllBytes(Paths.get(newDirPath))));
+
+      service.doService(message);
+
+
       cleanUpTempDirectory(directory);
     }
 

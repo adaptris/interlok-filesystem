@@ -165,7 +165,6 @@ public class DirectoryEntityServiceTest {
         Files.delete(tempDir.toPath());
       }
       catch (IOException e) {
-        //deleting file failed
         e.printStackTrace();
       }
     }
