@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -29,7 +30,7 @@ import static org.junit.Assert.*;
       File directory = createTempDirectory();
       File file = new File(new File(directory, "dir1"), "file1.txt");
       File output = new File(new File(directory, "dir2"), "file1.txt");
-      FileUtils.writeStringToFile(file, "Hello World");
+      FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
       MoveDirectoryService service = new MoveDirectoryService();
       //Empty methods, used to increase coverage
       service.prepare();
@@ -57,7 +58,7 @@ import static org.junit.Assert.*;
       final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
       File file = new File(new File(directory, "tempTestSource"), "file1.txt");
       Files.createDirectories(Paths.get(new File(directory, "tempTestTarget").getAbsolutePath()));
-      write(file, "Hello World");
+      write(file, "Hello World", Charset.defaultCharset());
       MoveDirectoryService service = new MoveDirectoryService();
 
       String target = directory + File.separator + "tempTestTarget";

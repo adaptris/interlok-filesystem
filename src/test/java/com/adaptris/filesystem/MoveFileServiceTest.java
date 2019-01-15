@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -22,7 +23,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(directory, "file1.txt");
     File output = new File(directory, "file2.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getAbsolutePath())
         .withOriginalPath(file.getAbsolutePath())
@@ -40,7 +41,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(directory, "file1.txt");
     File output = new File(directory, "file2.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getAbsolutePath())
         .withOriginalPath(file.getAbsolutePath())
@@ -57,7 +58,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(new File(directory, "dir1"), "file1.txt");
     File output = new File(new File(directory, "dir2"), "file1.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getParentFile().getAbsolutePath())
         .withOriginalPath(file.getParentFile().getAbsolutePath())
@@ -80,7 +81,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(new File(directory, "dir1"), "file1.txt");
     File output = new File(new File(directory, "dir2"), "file1.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getParentFile().getAbsolutePath())
         .withOriginalPath(file.getParentFile().getAbsolutePath())

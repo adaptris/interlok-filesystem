@@ -16,17 +16,17 @@
 
 package com.adaptris.filesystem;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import org.apache.commons.io.FileUtils;
+import org.junit.Test;
+
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.ServiceCase;
 import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.util.LifecycleHelper;
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * @author mwarman
@@ -36,7 +36,7 @@ public class DeleteDirectoryServiceTest extends ServiceCase {
   @Test
   public void testDoServiceDirectoryWithFile() throws Exception {
     File directory = createTempDirectory();
-    FileUtils.writeStringToFile(new File(directory, "file.txt"), "Hello World");
+    FileUtils.writeStringToFile(new File(directory, "file.txt"), "Hello World", Charset.defaultCharset());
     DeleteDirectoryService service = new DeleteDirectoryService()
         .withPath(new ConstantDataInputParameter(directory.getAbsolutePath()));
     LifecycleHelper.initAndStart(service);
@@ -72,7 +72,7 @@ public class DeleteDirectoryServiceTest extends ServiceCase {
   @Test
   public void testDoServiceOldBehaviourDirectoryWithFile() throws Exception {
     File directory = createTempDirectory();
-    FileUtils.writeStringToFile(new File(directory, "file.txt"), "Hello World");
+    FileUtils.writeStringToFile(new File(directory, "file.txt"), "Hello World", Charset.defaultCharset());
     DeleteDirectoryService service = new DeleteDirectoryService()
         .withDirectoryPath(directory.getAbsolutePath());
     LifecycleHelper.initAndStart(service);
@@ -129,12 +129,4 @@ public class DeleteDirectoryServiceTest extends ServiceCase {
     tempDir.delete();
   }
 
-  private void assertDirectory(File directory) throws Exception{
-    File file1 = new File(directory, "file.xml");
-    File file2 = new File(new File(directory, "dir"), "file1.xml");
-    byte[] file1Bytes = Files.readAllBytes(Paths.get(file1.toURI()));
-    byte[] file2Bytes = Files.readAllBytes(Paths.get(file2.toURI()));
-    assertEquals("<root>data</root>\n" , new String(file1Bytes));
-    assertEquals("<root>data1</root>\n" , new String(file2Bytes));
-  }
 }

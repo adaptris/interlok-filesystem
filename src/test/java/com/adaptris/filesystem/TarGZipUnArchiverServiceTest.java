@@ -16,13 +16,7 @@
 
 package com.adaptris.filesystem;
 
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ConfiguredDestination;
-import com.adaptris.core.ServiceCase;
-import com.adaptris.core.util.LifecycleHelper;
-import org.junit.After;
-import org.junit.Before;
+import static org.eclipse.jetty.util.IO.delete;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +24,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-import static org.eclipse.jetty.util.IO.delete;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.AdaptrisMessageFactory;
+import com.adaptris.core.ConfiguredDestination;
+import com.adaptris.core.ServiceCase;
+import com.adaptris.core.util.LifecycleHelper;
 
 /**
  * @author mwarman
