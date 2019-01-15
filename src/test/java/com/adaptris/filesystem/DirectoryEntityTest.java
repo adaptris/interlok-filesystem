@@ -41,7 +41,6 @@ public class DirectoryEntityTest {
 
         assertEquals(directoryEntity.getId(), directoryEntity.getDescription());
         assertTrue(directoryEntity.getAbsolutePath().contains(directoryEntity.getId()));
-        assertEquals("Temp", directoryEntity.getParentDirectory());
         assertEquals(d.toString(), directoryEntity.getCreatedAt().toString());
     }
 
