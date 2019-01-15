@@ -56,16 +56,16 @@ import static org.junit.Assert.*;
       File directory = createTempDirectory();
       final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
       File file = new File(new File(directory, "tempTestSource"), "file1.txt");
-      Files.createDirectories(Paths.get(directory + "\\tempTestTarget"));
+      Files.createDirectories(Paths.get(new File(directory, "tempTestTarget").getAbsolutePath()));
       write(file, "Hello World");
       MoveDirectoryService service = new MoveDirectoryService();
 
-      String target = directory + "\\tempTestTarget";
-      String source = directory + "\\tempTestSource";
+      String target = directory + File.separator + "tempTestTarget";
+      String source = directory + File.separator + "tempTestSource";
       File sourceDir = new File (source);
       File targetDir = new File (target);
 
-      service.setNewDirectoryPath(target + "\\file1.txt");
+      service.setNewDirectoryPath(new File(target, "file1.txt").getAbsolutePath());
       service.setOriginalDirectoryPath(file.getAbsolutePath());
       String originalDirPath = service.getOriginalDirectoryPath();
       String newDirPath = service.getNewDirectoryPath();

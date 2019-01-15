@@ -40,7 +40,7 @@ public class DirectoryEntityTest {
         Date d = new java.util.Date();
 
         assertEquals(directoryEntity.getId(), directoryEntity.getDescription());
-        assertTrue(0 == directoryEntity.getSize());
+        assertEquals(new Long(0), directoryEntity.getSize());
         assertTrue(directoryEntity.getAbsolutePath().contains(directoryEntity.getId()));
         assertEquals("Temp", directoryEntity.getParentDirectory());
         assertEquals(d.toString(), directoryEntity.getCreatedAt().toString());
@@ -54,7 +54,6 @@ public class DirectoryEntityTest {
         Date newDate = new java.util.Date(2018, 11, 23);
         directoryEntity.setCreatedAt(newDate);
         //Confirming that directoryEntity is set to defaults
-        assertEquals("Should have same \'getParentDirectory\'","Temp", directoryEntity.getParentDirectory());
         assertEquals("Should have same \'getDescription\'", directoryEntity.getDescription(), directoryEntityII.getDescription());
         assertEquals("Should have identical \'updatedAt\' dates", directoryEntity.getUpdatedAt(), directoryEntityII.getUpdatedAt());
         assertNotSame("Should have disparate \'getId\' prior to update", directoryEntity.getId(), directoryEntityII.getId());
