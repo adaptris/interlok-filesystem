@@ -16,6 +16,11 @@
 
 package com.adaptris.filesystem;
 
+import java.io.File;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.InputFieldHint;
@@ -29,11 +34,6 @@ import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.interlok.InterlokException;
 import com.adaptris.interlok.config.DataInputParameter;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import org.hibernate.validator.constraints.NotBlank;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.io.File;
 
 /**
  * @config delete-directory-service

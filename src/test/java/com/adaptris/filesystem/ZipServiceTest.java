@@ -18,6 +18,7 @@ package com.adaptris.filesystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Test;
@@ -150,7 +151,7 @@ public class ZipServiceTest extends ServiceCase
 		for (int i = 0; i < fileCount; i++)
 		{
 			final File f = TempFileUtils.createTrackedFile("zippy", "", root, this);
-			FileUtils.write(f, "Hello World");
+			FileUtils.write(f, "Hello World", Charset.defaultCharset());
 			f.deleteOnExit();
 		}
 		return root;

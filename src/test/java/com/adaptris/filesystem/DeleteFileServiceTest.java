@@ -69,7 +69,6 @@ public class DeleteFileServiceTest  extends ServiceCase {
     assertFalse(file2.exists());
   }
 
-
   @Override
   protected DeleteFileService retrieveObjectForSampleConfig() {
     return new DeleteFileService().withPath(new ConstantDataInputParameter("/home/interlok/file.xml"));

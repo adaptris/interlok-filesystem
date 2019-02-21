@@ -16,19 +16,19 @@
 
 package com.adaptris.filesystem;
 
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ConfiguredDestination;
-import com.adaptris.core.ServiceCase;
-import com.adaptris.core.util.LifecycleHelper;
-import org.junit.After;
-import org.junit.Before;
+import static org.eclipse.jetty.util.IO.delete;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
+
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.AdaptrisMessageFactory;
+import com.adaptris.core.ConfiguredDestination;
+import com.adaptris.core.ServiceCase;
+import com.adaptris.core.util.LifecycleHelper;
 
 /**
  * @author mwarman
@@ -95,6 +95,12 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     assertEquals(Arrays.toString(payload), Arrays.toString(message.getPayload()));
     assertDirectory(directory);
     LifecycleHelper.stopAndClose(service);
+    for (File childFile : directory.listFiles()) {
+
+      if (childFile.isDirectory()) {
+        delete(childFile);
+      }
+    }
     cleanUpTempDirectory(directory);
   }
 
@@ -110,6 +116,12 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     assertEquals(Arrays.toString(payload), Arrays.toString(message.getPayload()));
     assertDirectory(directory);
     LifecycleHelper.stopAndClose(service);
+    for (File childFile : directory.listFiles()) {
+
+      if (childFile.isDirectory()) {
+        delete(childFile);
+      }
+    }
     cleanUpTempDirectory(directory);
   }
 

@@ -16,19 +16,21 @@
 
 package com.adaptris.filesystem;
 
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.CoreException;
-import com.adaptris.core.MessageDrivenDestination;
-import com.adaptris.core.util.ExceptionHelper;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.regex.Pattern;
+
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.util.regex.Pattern;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.CoreException;
+import com.adaptris.core.MessageDrivenDestination;
+import com.adaptris.core.util.ExceptionHelper;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * @author mwarman
@@ -37,7 +39,6 @@ import java.util.regex.Pattern;
 public class FileExtractionMode implements ExtractionMode {
 
   private transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
-  private final static int BUFFER = 2048;
 
   private MessageDrivenDestination filenameMatch;
 

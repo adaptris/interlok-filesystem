@@ -7,8 +7,11 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static org.eclipse.jetty.util.IO.delete;
 
 /**
  * @author mwarman
@@ -16,14 +19,16 @@ import java.nio.file.Paths;
 public class MoveFileServiceTest extends ServiceCase {
 
   @Test
-  public void testMoveFile() throws Exception{
+  public void testCannotMoveFile() throws Exception{
     File directory = createTempDirectory();
     File file = new File(directory, "file1.txt");
     File output = new File(directory, "file2.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getAbsolutePath())
-        .withOriginalPath(file.getAbsolutePath());
+        .withOriginalPath(file.getAbsolutePath())
+        .withMoveDirectory(true);
+    service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
     service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
     assertFalse(file.exists());
     assertTrue(output.exists());
@@ -36,7 +41,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(directory, "file1.txt");
     File output = new File(directory, "file2.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getAbsolutePath())
         .withOriginalPath(file.getAbsolutePath())
@@ -53,18 +58,22 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(new File(directory, "dir1"), "file1.txt");
     File output = new File(new File(directory, "dir2"), "file1.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getParentFile().getAbsolutePath())
         .withOriginalPath(file.getParentFile().getAbsolutePath())
         .withMoveDirectory(true);
+    //What does this empty method do and why is it needed
+    service.prepare();
     service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
     assertFalse(file.getParentFile().exists());
     assertFalse(file.exists());
     assertTrue(output.getParentFile().exists());
     assertTrue(output.exists());
     assertEquals("Hello World", new String(Files.readAllBytes(Paths.get(output.toURI()))));
-    cleanUpTempDirectory(directory);
+    //What does this empty method do and why is it needed
+    service.closeService();
+    cleanUpTempPopulatedDir(directory);
   }
 
   @Test
@@ -72,7 +81,7 @@ public class MoveFileServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     File file = new File(new File(directory, "dir1"), "file1.txt");
     File output = new File(new File(directory, "dir2"), "file1.txt");
-    FileUtils.writeStringToFile(file, "Hello World");
+    FileUtils.writeStringToFile(file, "Hello World", Charset.defaultCharset());
     MoveFileService service = new MoveFileService()
         .withNewPath(output.getParentFile().getAbsolutePath())
         .withOriginalPath(file.getParentFile().getAbsolutePath())
@@ -83,7 +92,7 @@ public class MoveFileServiceTest extends ServiceCase {
     assertFalse(output.getParentFile().exists());
     assertFalse(output.exists());
     assertEquals("Hello World", new String(Files.readAllBytes(Paths.get(file.toURI()))));
-    cleanUpTempDirectory(directory);
+    cleanUpTempPopulatedDir(directory);
   }
 
   public File createTempDirectory() throws IOException {
@@ -103,6 +112,22 @@ public class MoveFileServiceTest extends ServiceCase {
       f.delete();
     }
     tempDir.delete();
+  }
+
+  public void cleanUpTempPopulatedDir(File tempDir)
+  {
+    try {
+      for (File childFile : tempDir.listFiles()) {
+
+        if (childFile.isDirectory()) {
+          delete(childFile);
+        }
+      }
+      Files.delete(tempDir.toPath());
+    } catch (IOException e) {
+      //deleting file failed
+      e.printStackTrace();
+    }
   }
 
   @Override

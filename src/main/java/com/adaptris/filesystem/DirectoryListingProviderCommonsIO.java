@@ -1,12 +1,12 @@
 package com.adaptris.filesystem;
 
-import com.adaptris.core.util.Args;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import java.io.File;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.util.Arrays;
-import java.util.List;
+import com.adaptris.core.util.Args;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * @author mwarman

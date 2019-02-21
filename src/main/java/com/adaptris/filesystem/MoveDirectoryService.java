@@ -26,7 +26,6 @@ import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
-import com.adaptris.core.DefaultMessageFactory;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -90,17 +89,17 @@ public class MoveDirectoryService extends ServiceImp {
     this.newDirectoryPath = newDirectoryPath;
   }
   
-  public static void main(String[] args) {
-    MoveDirectoryService moveDirectoryService = new MoveDirectoryService();
-    moveDirectoryService.setOriginalDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources");
-    moveDirectoryService.setNewDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources2");
-    
-    try {
-      moveDirectoryService.doService(DefaultMessageFactory.getDefaultInstance().newMessage());
-    } catch (ServiceException e) {
-      e.printStackTrace();
-    }
-    
-  }
+//  public static void main(String[] args) {
+//    MoveDirectoryService moveDirectoryService = new MoveDirectoryService();
+//    moveDirectoryService.setOriginalDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources");
+//    moveDirectoryService.setNewDirectoryPath("C:\\Adaptris\\3.6.5\\ui-resources2");
+//
+//    try {
+//      moveDirectoryService.doService(DefaultMessageFactory.getDefaultInstance().newMessage());
+//    } catch (ServiceException e) {
+//      e.printStackTrace();
+//    }
+//
+//  }
 
 }
