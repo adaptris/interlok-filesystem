@@ -185,7 +185,7 @@ public class ZipFolder {
    * @throws IOException if the child when normalized isn't part of the parent.
    */
   public static File validateTree(File parentDir, File child) throws IOException {
-    if (!child.toPath().normalize().startsWith(parentDir.toPath())) {
+    if (!child.toPath().normalize().startsWith(parentDir.toPath().normalize())) {
       throw new IOException("Normalized entry isn't in the right directory tree (zip-slip?)");
     }
     return child;
