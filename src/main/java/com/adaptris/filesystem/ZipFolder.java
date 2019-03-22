@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,8 +162,8 @@ public class ZipFolder
 			{
 				final String fileName = ze.getName();
 
-				final File file = new File(folder, fileName);
-				LOG.debug("Extracting " + fileName + " to " + file.getAbsolutePath());
+				final File file = validateTree(dir, new File(dir, fileName));
+				LOG.debug("Extracting {} to {}", fileName , file.getAbsolutePath());
 				// create directories for sub directories in zip
 				new File(file.getParent()).mkdirs();
 
@@ -207,4 +206,20 @@ public class ZipFolder
 			}
 		}
 	}
+
+  /**
+   * Validate the the child exists as part of the parent which should mitigate against zip slip when
+   * extracting files.
+   * 
+   * @param parentDir the parent dir
+   * @param child the entry within the parent dir.
+   * @return the child, if it's valid for method chaining.
+   * @throws IOException if the child when normalized isn't part of the parent.
+   */
+  public static File validateTree(File parentDir, File child) throws IOException {
+    if (!child.toPath().normalize().startsWith(parentDir.toPath())) {
+      throw new IOException("Normalized entry isn't in the right directory tree (zip-slip?)");
+    }
+    return child;
+  }
 }
