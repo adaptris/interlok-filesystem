@@ -19,11 +19,9 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
-
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.MessageDrivenDestination;
@@ -58,17 +56,18 @@ public class DirectoryExtractionMode implements ExtractionMode {
       messageTempDirectory.mkdirs();
       TarArchiveEntry entry;
       while ((entry = (TarArchiveEntry) tarArchiveInputStream.getNextEntry()) != null) {
+        File target = ZipFolder.validateTree(messageTempDirectory,
+            new File(messageTempDirectory, entry.getName()));
         if (entry.isDirectory()) {
-          File f = new File(messageTempDirectory, entry.getName());
-          f.mkdirs();
+          target.mkdirs();
         } else {
-          try (FileOutputStream os = new FileOutputStream(new File(messageTempDirectory, entry.getName()))) {
+          try (FileOutputStream os = new FileOutputStream(target)) {
             IOUtils.copy(tarArchiveInputStream, os);
           }
         }
       }
     } catch (IOException e) {
-      ExceptionHelper.rethrowCoreException(e.getMessage(), e);
+      throw ExceptionHelper.wrapCoreException(e.getMessage(), e);
     }
   }
 
