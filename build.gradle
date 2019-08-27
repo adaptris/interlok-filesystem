@@ -28,9 +28,9 @@ ext {
   componentName='Interlok File System'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = '1.7.26'
-  log4j2Version = "2.11.2"
-  tikaVersion = "1.21"
+  slf4jVersion = '1.7.27'
+  log4j2Version = "2.12.1"
+  tikaVersion = "1.22"
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -79,7 +79,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile "org.apache.commons:commons-compress:1.18"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
-  compile "org.json:json:20180813"
+  compile "org.json:json:20190722"
   compile "org.apache.tika:tika-core:$tikaVersion"
   // compile "org.apache.tika:tika-parsers:$tikaVersion", optional {
   //   exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
