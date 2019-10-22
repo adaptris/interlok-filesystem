@@ -28,7 +28,7 @@ ext {
   componentName='Interlok File System'
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = '1.7.27'
+  slf4jVersion = '1.7.28'
   log4j2Version = "2.12.1"
   tikaVersion = "1.22"
 }
@@ -77,7 +77,7 @@ configurations.all {
 dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  compile "org.apache.commons:commons-compress:1.18"
+  compile "org.apache.commons:commons-compress:1.19"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
   compile "org.json:json:20190722"
   compile "org.apache.tika:tika-core:$tikaVersion"
