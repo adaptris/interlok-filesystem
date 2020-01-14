@@ -1,36 +1,43 @@
 package com.adaptris.filesystem;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.ServiceCase;
 import com.adaptris.core.common.ConstantDataInputParameter;
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * @author mwarman
  */
-public class DeleteFileServiceTest  extends ServiceCase {
+public class DeleteFileServiceTest extends ServiceCase {
 
   private File directoryPath;
 
   @Override
-  protected void setUp() throws Exception
-  {
+  public boolean isAnnotatedForJunit4() {
+    return true;
+  }
+
+  @Before
+  public void setUp() throws Exception {
     directoryPath = createTempDirectory();
   }
 
-  @Override
-  protected void tearDown() throws Exception {
+  @After
+  public void tearDown() throws Exception {
     cleanUpTempDirectory(directoryPath);
   }
 
   @Test
-  public void testServiceDeleteEmptyParent() throws Exception{
+  public void testServiceDeleteEmptyParent() throws Exception {
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
     DeleteFileService service = new DeleteFileService();
     service.setDeleteEmptyParent(true);
@@ -50,7 +57,7 @@ public class DeleteFileServiceTest  extends ServiceCase {
   }
 
   @Test
-  public void testServiceWithoutDeleteEmptyParent() throws Exception{
+  public void testServiceWithoutDeleteEmptyParent() throws Exception {
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
     DeleteFileService service = new DeleteFileService();
     service.setDeleteEmptyParent(false);
@@ -77,8 +84,7 @@ public class DeleteFileServiceTest  extends ServiceCase {
   public File createTempDirectory() throws IOException {
     File tempDir = File.createTempFile(DirectoryListingProvider.class.getSimpleName(), "", null);
     tempDir.delete();
-    if (!tempDir.exists())
-    {
+    if (!tempDir.exists()) {
       tempDir.mkdir();
     }
     new FileOutputStream(new File(tempDir, "text1.xml")).close();
@@ -89,10 +95,8 @@ public class DeleteFileServiceTest  extends ServiceCase {
     return tempDir;
   }
 
-  public void cleanUpTempDirectory(File tempDir)
-  {
-    for (final File f : FileUtils.listFiles(tempDir, null, true))
-    {
+  public void cleanUpTempDirectory(File tempDir) {
+    for (final File f : FileUtils.listFiles(tempDir, null, true)) {
       f.delete();
     }
     File recursive = new File(tempDir, "recursive");
