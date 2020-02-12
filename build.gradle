@@ -96,7 +96,7 @@ configurations.all {
 dependencies {
   compile ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  compile "org.apache.commons:commons-compress:1.19"
+  compile "org.apache.commons:commons-compress:1.20"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
   compile "org.json:json:20190722"
   compile "org.apache.tika:tika-core:$tikaVersion"
