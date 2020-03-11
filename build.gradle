@@ -87,6 +87,8 @@ configurations {
   // don't exclude woodstox; as tika-parsers -> org.apache.cxf:cxf-rt-rs-client -> com.fasterxml.woodstox:woodstox-core
   // all*.exclude group: 'org.codehaus.woodstox'
   all*.exclude group: 'org.eclipse.jetty.orbit', module: 'javax.mail.glassfish'
+  // INTERLOK-3197 exclude old javax.mail
+  all*.exclude group: 'com.sun.mail', module: 'javax.mail'
 }
 
 configurations.all {
