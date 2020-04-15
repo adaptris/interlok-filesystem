@@ -71,39 +71,6 @@ public class DeleteDirectoryServiceTest extends ServiceCase {
   }
 
 
-  @Test
-  public void testDoServiceOldBehaviourDirectoryWithFile() throws Exception {
-    File directory = createTempDirectory();
-    FileUtils.writeStringToFile(new File(directory, "file.txt"), "Hello World", Charset.defaultCharset());
-    DeleteDirectoryService service = new DeleteDirectoryService().withDirectoryPath(directory.getAbsolutePath());
-    LifecycleHelper.initAndStart(service);
-    service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
-    LifecycleHelper.stopAndClose(service);
-    assertFalse(directory.exists());
-  }
-
-  @Test
-  public void testDoServiceOldBehaviourDirectory() throws Exception {
-    File directory = createTempDirectory();
-    DeleteDirectoryService service = new DeleteDirectoryService().withDirectoryPath(directory.getAbsolutePath());
-    LifecycleHelper.initAndStart(service);
-    service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
-    LifecycleHelper.stopAndClose(service);
-    assertFalse(directory.exists());
-  }
-
-  @Test
-  public void testDoServiceOldBehaviourDirectoryDoesExists() throws Exception {
-    File directory = createTempDirectory();
-    File noneExisting = new File(directory, "dir");
-    DeleteDirectoryService service = new DeleteDirectoryService().withDirectoryPath(noneExisting.getAbsolutePath());
-    LifecycleHelper.initAndStart(service);
-    service.doService(AdaptrisMessageFactory.getDefaultInstance().newMessage());
-    LifecycleHelper.stopAndClose(service);
-    assertTrue(directory.exists());
-    cleanUpTempDirectory(directory);
-  }
-
   @Override
   protected Object retrieveObjectForSampleConfig() {
     return new DeleteDirectoryService().withPath(new ConstantDataInputParameter("C:\\temp\\directory"));

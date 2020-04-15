@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,10 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.MetadataElement;
 import com.adaptris.core.ServiceCase;
 import com.adaptris.core.common.ConstantDataInputParameter;
-import com.adaptris.core.common.MetadataDataInputParameter;
 import com.adaptris.core.common.MetadataDataOutputParameter;
 import com.adaptris.core.common.StringPayloadDataOutputParameter;
 import com.adaptris.core.services.metadata.DateFormatBuilder;
@@ -145,55 +142,6 @@ public class DirectoryListingServiceTest extends ServiceCase {
     }
   }
 
-  @Test
-  public void testServiceOldBehaviourOverride() throws Exception {
-    final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage("",
-        Collections.singleton(new MetadataElement("dir", directoryPath)));
-    final DirectoryListingService service = new DirectoryListingService();
-    service.setDirectoryPath(directoryPath);
-    service.setMetadataKey(METADATA_KEY);
-    service.setDirectory(new MetadataDataInputParameter("dir"));
-    service.setOutput(new StringPayloadDataOutputParameter());
-
-    execute(service, message);
-
-    final String ls = message.getContent();
-
-    for (final String file : DEFAULT_PROVIDER_EXPECTED_FILES) {
-      assertTrue(ls.contains(file));
-    }
-  }
-
-  @Test
-  public void testServiceOldBehaviourWithMetadataKey() throws Exception {
-    final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
-    final DirectoryListingService service = new DirectoryListingService();
-    service.setDirectoryPath(directoryPath);
-    service.setMetadataKey(METADATA_KEY);
-
-    execute(service, message);
-
-    final String ls = message.getMetadataValue(METADATA_KEY);
-
-    for (final String file : DEFAULT_PROVIDER_EXPECTED_FILES) {
-      assertTrue(ls.contains(file));
-    }
-  }
-
-  @Test
-  public void testServiceOldBehaviourPayload() throws Exception {
-    final AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage();
-    final DirectoryListingService service = new DirectoryListingService();
-    service.setDirectoryPath(directoryPath);
-
-    execute(service, message);
-
-    final String ls = message.getContent();
-
-    for (final String file : DEFAULT_PROVIDER_EXPECTED_FILES) {
-      assertTrue(ls.contains(file));
-    }
-  }
 
   public File createTempDirectory() throws IOException {
     File tempDir = File.createTempFile(DirectoryListingProvider.class.getSimpleName(), "", null);
