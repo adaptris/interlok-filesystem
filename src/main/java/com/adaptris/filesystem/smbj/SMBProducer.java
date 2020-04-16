@@ -51,7 +51,7 @@ import lombok.Setter;
  * 
  */
 @XStreamAlias("smb-producer")
-@ComponentProfile(summary = "Read to an SMB location", tag = "samba,smb", recommended = {SMBConnection.class}, since = "3.10.1")
+@ComponentProfile(summary = "Write to an SMB location", tag = "samba,smb", recommended = {SMBConnection.class}, since = "3.10.1")
 @DisplayOrder(order = {"destination", "overwrite", "filenameCreator", "encoder", "overwrite"})
 @NoArgsConstructor
 public class SMBProducer extends ProduceOnlyProducerImp {
