@@ -21,12 +21,10 @@ import static com.adaptris.core.CoreConstants.ORIGINAL_NAME_KEY;
 import static com.hierynomus.protocol.commons.EnumWithValue.EnumUtils.isSet;
 import java.io.FileFilter;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
@@ -44,14 +42,10 @@ import com.adaptris.core.ftp.FtpConsumer;
 import com.adaptris.interlok.cloud.RemoteFile;
 import com.adaptris.interlok.util.Args;
 import com.adaptris.interlok.util.FileFilterBuilder;
-import com.hierynomus.msdtyp.AccessMask;
 import com.hierynomus.msfscc.FileAttributes;
 import com.hierynomus.msfscc.fileinformation.FileIdBothDirectoryInformation;
-import com.hierynomus.mssmb2.SMB2CreateDisposition;
-import com.hierynomus.mssmb2.SMB2ShareAccess;
 import com.hierynomus.smbj.common.SmbPath;
 import com.hierynomus.smbj.share.DiskShare;
-import com.hierynomus.smbj.share.File;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -165,13 +159,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
     AdaptrisMessage msg = AdaptrisMessageFactory.defaultIfNull(getMessageFactory()).newMessage();
     log.trace("Attempting to get [{}], estimated size [{}]", fileRef.getPath(), fileRef.length());
     SmbPath smbRef = SmbPath.parse(fileRef.getPath());
-    try (
-        File smbFile = share.openFile(smbRef.getPath(), EnumSet.of(AccessMask.FILE_READ_DATA), null, SMB2ShareAccess.ALL,
-        SMB2CreateDisposition.FILE_OPEN, null); 
-        InputStream in = smbFile.getInputStream();
-        OutputStream out = msg.getOutputStream()) {
-      IOUtils.copy(in, out);
-    }
+    Helper.read(share, smbRef, msg);
     msg.addMetadata(ORIGINAL_NAME_KEY, fileRef.getName());
     msg.addMetadata(FS_CONSUME_DIRECTORY, toUnc(fileRef.getParent()));
     msg.addMetadata(FS_FILE_SIZE, "" + msg.getSize());

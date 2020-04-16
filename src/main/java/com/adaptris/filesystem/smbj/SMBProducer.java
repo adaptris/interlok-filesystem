@@ -17,7 +17,6 @@ package com.adaptris.filesystem.smbj;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.EnumSet;
 import java.util.Optional;
 import javax.validation.Valid;
 import org.apache.commons.io.IOUtils;
@@ -33,10 +32,7 @@ import com.adaptris.core.ProduceDestination;
 import com.adaptris.core.ProduceException;
 import com.adaptris.core.ProduceOnlyProducerImp;
 import com.adaptris.core.util.ExceptionHelper;
-import com.hierynomus.msdtyp.AccessMask;
-import com.hierynomus.mssmb2.SMB2ShareAccess;
 import com.hierynomus.smbj.common.SmbPath;
-import com.hierynomus.smbj.share.DiskShare;
 import com.hierynomus.smbj.share.File;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Getter;
@@ -87,7 +83,7 @@ public class SMBProducer extends ProduceOnlyProducerImp {
       SMBConnection conn = retrieveConnection(SMBConnection.class);
       Connector worker = conn.createOrGetWorker(filePath);
       WriteMode mode = mode();
-      try (File smbFile = openFile(worker.getDiskShare(), filePath, mode);
+      try (File smbFile = Helper.open(worker.getDiskShare(), filePath, mode);
           OutputStream out = mode.getOutputStream(smbFile)) {
         outputWriter().write(msg, out);
       }
@@ -95,7 +91,6 @@ public class SMBProducer extends ProduceOnlyProducerImp {
       throw ExceptionHelper.wrapProduceException(e);
     }
   }
-
 
   public SMBProducer withFilenameCreator(FileNameCreator f) {
     setFilenameCreator(f);
@@ -119,10 +114,6 @@ public class SMBProducer extends ProduceOnlyProducerImp {
     return ObjectUtils.defaultIfNull(getFilenameCreator(), new FormattedFilenameCreator());
   }
 
-  private static File openFile(DiskShare share, SmbPath filePath, WriteMode mode) {
-    return share.openFile(filePath.getPath(), EnumSet.of(AccessMask.GENERIC_ALL), null, SMB2ShareAccess.ALL,
-        mode.fileOpenMode(), null);
-  }
 
   private static EncodedWriter rawWriter() {
     return (msg, out) -> {
