@@ -133,10 +133,11 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
       List<RemoteFile> files = list(worker.getDiskShare(), smbPath);
       for (RemoteFile file : files) {
         AdaptrisMessage msg = decode(buildMessage(worker.getDiskShare(), file));
-        retrieveAdaptrisMessageListener().onAdaptrisMessage(msg);
+        retrieveAdaptrisMessageListener().onAdaptrisMessage(msg, (callback) -> {
+          deleteQuietly(worker.getDiskShare(), SmbPath.parse(file.getPath()));
+        });
         count++;
         // Delete the file quietly.
-        deleteQuietly(worker.getDiskShare(), SmbPath.parse(file.getPath()));
         if (!continueProcessingMessages(count)) {
           break;
         }
@@ -172,7 +173,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
       IOUtils.copy(in, out);
     }
     msg.addMetadata(ORIGINAL_NAME_KEY, fileRef.getName());
-    msg.addMetadata(FS_CONSUME_DIRECTORY, fileRef.getParent());
+    msg.addMetadata(FS_CONSUME_DIRECTORY, toUnc(fileRef.getParent()));
     msg.addMetadata(FS_FILE_SIZE, "" + msg.getSize());
     return msg;
   }
@@ -187,12 +188,25 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
     return files.stream()
         .filter((f) -> canProcess(f.getFileAttributes()))
         .map((f) -> new RemoteFile.Builder().setLastModified(f.getLastAccessTime().toEpochMillis())
-            .setPath(new SmbPath(smbPath, f.getFileName()).toUncPath())
+            .setPath(slasher(new SmbPath(smbPath, f.getFileName()).toUncPath()))
             .setIsDirectory(false)
             .setIsFile(true)
             .setLength(f.getEndOfFile()).build())
         .filter((f) -> fileFilter.accept(f))
         .collect(Collectors.toList());
+  }
+
+  // Since SmbPath changes most things into UNC style (i.e. with backslashes)
+  // We can't have that, since this will cause issues with RemoteFile in the sense
+  // that it won't detect the paths properly if we're executing on Unix.
+  // So, we convert all the backslashses back to slashes... SmbPath already
+  // does the reverse of this under the covers.
+  private static final String slasher(String uncPath) {
+    return uncPath.replace('\\', '/');
+  }
+
+  private static final String toUnc(String path) {
+    return SmbPath.parse(path).toUncPath();
   }
 
   private boolean canProcess(long fileAttributes) {
