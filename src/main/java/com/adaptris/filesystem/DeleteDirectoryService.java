@@ -17,18 +17,14 @@
 package com.adaptris.filesystem;
 
 import java.io.File;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
-import com.adaptris.annotation.InputFieldHint;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
-import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.util.Args;
 import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.interlok.InterlokException;
@@ -42,13 +38,6 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @AdapterComponent
 @ComponentProfile(summary = "Will delete directory and its contents.", tag = "FS, FileSystem")
 public class DeleteDirectoryService  extends ServiceImp {
-
-  /**
-   * The folder to delete.
-   */
-  @InputFieldHint(expression = true)
-  @Deprecated
-  private String directoryPath;
 
   @NotNull
   @Valid
@@ -69,19 +58,6 @@ public class DeleteDirectoryService  extends ServiceImp {
     }
   }
 
-  @Deprecated
-  public String getDirectoryPath() {
-    return directoryPath;
-  }
-
-  public void setDirectoryPath(String directoryPath) {
-    this.directoryPath = Args.notEmpty(directoryPath, "directoryPath");
-  }
-
-  public DeleteDirectoryService withDirectoryPath(String directoryPath){
-    setDirectoryPath(directoryPath);
-    return this;
-  }
 
   public DataInputParameter<String> getPath() {
     return path;
@@ -98,14 +74,7 @@ public class DeleteDirectoryService  extends ServiceImp {
 
   @Override
   protected void initService() throws CoreException {
-    if(getDirectoryPath() != null){
-      log.warn("directoryPath is deprecated use path.");
-      if(getPath() == null){
-        setPath(new ConstantDataInputParameter(getDirectoryPath()));
-      } else {
-        log.warn("directoryPath ignored as path is set");
-      }
-    }
+
   }
 
   @Override
