@@ -132,7 +132,7 @@ dependencies {
     changing= true
     exclude group: "org.apache.logging.log4j"
   }
-  testCompile ("org.awaitility:awaitility:4.0.2")
+  testCompile ("org.awaitility:awaitility:4.0.3")
   testCompile ("org.mockito:mockito-core:$mockitoVersion")
   testCompile ("org.mockito:mockito-inline:$mockitoVersion")
 
