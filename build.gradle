@@ -109,7 +109,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile "org.apache.commons:commons-compress:1.20"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
-  compile "org.json:json:20190722"
+  compile "org.json:json:20200518"
   compile "org.apache.tika:tika-core:$tikaVersion"
   compile "com.hierynomus:smbj:0.10.0"
 
