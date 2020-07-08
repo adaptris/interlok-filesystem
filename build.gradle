@@ -8,8 +8,9 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '5.0.3'
-  id 'com.github.spotbugs' version '4.0.5'
-  id "io.freefair.lombok" version "5.0.0"
+  id 'com.github.spotbugs' version '4.2.3'
+  id "io.freefair.lombok" version "5.1.0"
+  id 'org.owasp.dependencycheck' version '5.3.2.1'
 
 }
 
@@ -33,7 +34,6 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
-  log4j2Version = "2.13.2"
   tikaVersion = "1.24.1"
   mockitoVersion = '3.3.3'
 }
@@ -109,7 +109,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile "org.apache.commons:commons-compress:1.20"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
-  compile "org.json:json:20190722"
+  compile "org.json:json:20200518"
   compile "org.apache.tika:tika-core:$tikaVersion"
   compile "com.hierynomus:smbj:0.10.0"
 
@@ -122,7 +122,7 @@ dependencies {
   // compile "com.fasterxml.woodstox:woodstox-core:5.1.0", optional
   // compile "org.codehaus.woodstox:stax2-api:4.1", optional
 
-  annotationProcessor ("com.adaptris:interlok-common:$interlokCoreVersion") {changing= true}
+  annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
 
   testCompile "junit:junit:4.13"
   testCompile "org.slf4j:slf4j-simple:$slf4jVersion"
@@ -132,7 +132,7 @@ dependencies {
     changing= true
     exclude group: "org.apache.logging.log4j"
   }
-  testCompile ("org.awaitility:awaitility:4.0.2")
+  testCompile ("org.awaitility:awaitility:4.0.3")
   testCompile ("org.mockito:mockito-core:$mockitoVersion")
   testCompile ("org.mockito:mockito-inline:$mockitoVersion")
 
@@ -291,6 +291,17 @@ spotbugsMain {
   }
   // includeFilter = new File("$rootDir/gradle/spotbugs-filter.xml")
   // excludeFilter = new File("$rootDir/gradle/spotbugs-exclude.xml")
+}
+
+dependencyCheck  {
+  suppressionFiles= [ "https://raw.githubusercontent.com/adaptris/interlok/develop/gradle/owasp-exclude.xml" ]
+  skipConfigurations = [ "antSql", "spotbugs", "umlDoclet", "offlineJavadocPackages", "javadoc", "jacocoAnt", "jacocoAgent", "spotbugsPlugins", "spotbugsSlf4j" ]
+  formats = [ "HTML", "JUNIT" ]
+  junitFailOnCVSS = 7.0
+  failBuildOnCVSS = 7.0
+  analyzers {
+    assemblyEnabled=false
+  }
 }
 
 // disable spotbugsTests which checks our test code..
