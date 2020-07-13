@@ -65,7 +65,7 @@ public class SMBConsumerTest extends ConsumerCase {
   @Override
   protected StandaloneConsumer retrieveObjectForSampleConfig() {
     SMBConsumer consumer = new SMBConsumer().withFileFilterImp(null);
-    consumer.setDestination(new ConfiguredConsumeDestination(SMB_PATH));
+    consumer.setPath(SMB_PATH);
     return new StandaloneConsumer(new SMBConnection(), consumer);
   }
 
@@ -75,7 +75,7 @@ public class SMBConsumerTest extends ConsumerCase {
     MockMessageListener listener = new MockMessageListener();
     SMBConsumer consumer = new SMBConsumer().withFileFilterImp(null);
     assertEquals(CoreConstants.FS_CONSUME_DIRECTORY, consumer.consumeLocationKey());
-    consumer.setDestination(new ConfiguredConsumeDestination(SMB_PATH));
+    consumer.setPath(SMB_PATH);
     PollerCallback callback = new PollerCallback();
     consumer.setPoller(new RandomIntervalPoller(new TimeInterval(1L, TimeUnit.SECONDS)).withPollerCallback(callback));
     consumer.setMaxMessagesPerPoll(5);
@@ -110,7 +110,7 @@ public class SMBConsumerTest extends ConsumerCase {
         .until(() -> listener.messageCount() >= 10);
     } finally {
       LifecycleHelper.stopAndClose(sc);
-    }    
+    }
   }
 
   private class PollerCallback implements Callback {

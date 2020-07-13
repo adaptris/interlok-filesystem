@@ -25,11 +25,13 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
 import org.apache.commons.lang3.StringUtils;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldHint;
+import com.adaptris.annotation.Removal;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageEncoder;
 import com.adaptris.core.AdaptrisMessageFactory;
@@ -39,8 +41,9 @@ import com.adaptris.core.CoreConstants;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.fs.FsConsumer;
 import com.adaptris.core.ftp.FtpConsumer;
+import com.adaptris.core.util.DestinationHelper;
+import com.adaptris.core.util.LoggingHelper;
 import com.adaptris.interlok.cloud.RemoteFile;
-import com.adaptris.interlok.util.Args;
 import com.adaptris.interlok.util.FileFilterBuilder;
 import com.hierynomus.msfscc.FileAttributes;
 import com.hierynomus.msfscc.fileinformation.FileIdBothDirectoryInformation;
@@ -59,17 +62,17 @@ import lombok.Setter;
  * directory ( {@value com.adaptris.core.CoreConstants#FS_CONSUME_DIRECTORY}) - in this instance the directory will be UNC path so
  * it will include the server/share-name; and the filesize ({@value com.adaptris.core.CoreConstants#FS_FILE_SIZE}).
  * </p>
- * 
+ *
  * <p>
  * The behaviour of this consumer is to not recurse into sub-directories and to ignore hidden files.
  * </p>
- * 
+ *
  * @config smb-consumer
- * 
+ *
  */
 @XStreamAlias("smb-consumer")
 @ComponentProfile(summary = "Consume from an SMB location", tag = "consumer,samba,smb", recommended = {SMBConnection.class},
-    since = "3.10.1", 
+    since = "3.10.1",
     metadata = {CoreConstants.ORIGINAL_NAME_KEY, CoreConstants.FS_FILE_SIZE, CoreConstants.FS_CONSUME_DIRECTORY,
         CoreConstants.MESSAGE_CONSUME_LOCATION})
 @DisplayOrder(order = {"connection", "fileFilterImp", "poller"})
@@ -104,23 +107,67 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   @Setter
   private String fileFilterImp;
 
+  /**
+   * The consume destination represents the SMB path and should be in the form
+   * {@code \\server-name\shareName\path\to\dir}.
+   *
+   */
+  @Deprecated
+  @Valid
+  @Removal(version = "4.0.0", message = "Use 'path' and 'filter-expression' instead")
+  @Getter
+  @Setter
+  private ConsumeDestination destination;
+
+  /**
+   * The SMB Path to read files from in the form {@code \\server-name\shareName\path\to\dir}.
+   *
+   */
+  @Getter
+  @Setter
+  // Needs to be @NotBlank when destination is removed.
+  private String path;
+  /**
+   * The filter expression to use when listing files.
+   * <p>
+   * If not specified then will default in a file filter that matches all files.
+   * </p>
+   */
+  @Getter
+  @Setter
+  private String filterExpression;
+
+  private transient boolean destinationWarningLogged = false;
+
   // Always non-null because FileFilterBuilder does that
   protected transient FileFilter fileFilter;
 
   @Override
   protected void prepareConsumer() throws CoreException {
+    if (getDestination() != null) {
+      LoggingHelper.logWarning(destinationWarningLogged, () -> destinationWarningLogged = true,
+          "{} uses destination, use path instead", LoggingHelper.friendlyName(this));
+    }
+    DestinationHelper.mustHaveEither(getPath(), getDestination());
   }
 
   @Override
   public void init() throws CoreException {
-    Args.notNull(getDestination(), "destination");
-    fileFilter = FileFilterBuilder.build(getDestination().getFilterExpression(), fileFilterImp());
+    fileFilter = FileFilterBuilder.build(filterExpression(), fileFilterImp());
+  }
+
+  private String smbPath() {
+    return DestinationHelper.consumeDestination(getPath(), getDestination());
+  }
+
+  private String filterExpression() {
+    return DestinationHelper.filterExpression(getFilterExpression(), getDestination());
   }
 
   @Override
   protected int processMessages() {
     int count = 0;
-    SmbPath smbPath = SmbPath.parse(getDestination().getDestination());
+    SmbPath smbPath = SmbPath.parse(smbPath());
     SMBConnection conn = retrieveConnection(SMBConnection.class);
     try {
       Connector worker = conn.createOrGetWorker(smbPath);
@@ -221,6 +268,11 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   public <T extends SMBConsumer> T withFileFilterImp(String s) {
     setFileFilterImp(s);
     return (T) this;
+  }
+
+  @Override
+  protected String newThreadName() {
+    return DestinationHelper.threadName(retrieveAdaptrisMessageListener(), getDestination());
   }
 
 }
