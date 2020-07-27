@@ -24,6 +24,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldDefault;
+import com.adaptris.annotation.InputFieldHint;
+import com.adaptris.annotation.Removal;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.FileNameCreator;
@@ -31,7 +33,9 @@ import com.adaptris.core.FormattedFilenameCreator;
 import com.adaptris.core.ProduceDestination;
 import com.adaptris.core.ProduceException;
 import com.adaptris.core.ProduceOnlyProducerImp;
+import com.adaptris.core.util.DestinationHelper;
 import com.adaptris.core.util.ExceptionHelper;
+import com.adaptris.core.util.LoggingHelper;
 import com.hierynomus.smbj.common.SmbPath;
 import com.hierynomus.smbj.share.File;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -41,16 +45,17 @@ import lombok.Setter;
 
 /**
  * Produce to a SMB share.
- * 
- * 
+ *
+ *
  * @config smb-producer
- * 
+ *
  */
 @XStreamAlias("smb-producer")
 @ComponentProfile(summary = "Write to an SMB location", tag = "samba,smb", recommended = {SMBConnection.class}, since = "3.10.1")
 @DisplayOrder(order = {"destination", "overwrite", "filenameCreator", "encoder", "overwrite"})
 @NoArgsConstructor
 public class SMBProducer extends ProduceOnlyProducerImp {
+
   @Valid
   @Getter
   @Setter
@@ -70,16 +75,43 @@ public class SMBProducer extends ProduceOnlyProducerImp {
   @InputFieldDefault(value = "smb-create-mode")
   private WriteMode mode;
 
-  @Override
-  public void prepare() throws CoreException {
-  }
+  /**
+   * The destination represents the base-directory where you are producing files to.
+   *
+   */
+  @Getter
+  @Setter
+  @Deprecated
+  @Valid
+  @Removal(version = "4.0.0", message = "Use 'path' instead")
+  private ProduceDestination destination;
+
+  /**
+   * The SMB Path to write files to in the form {@code \\server-name\shareName\path\to\dir}.
+   *
+   */
+  @InputFieldHint(expression = true)
+  @Getter
+  @Setter
+  // Needs to be @NotBlank when destination is removed.
+  private String path;
+
+  private transient boolean destWarning;
+
 
   @Override
-  public void produce(AdaptrisMessage msg, ProduceDestination dest) throws ProduceException {
+  public void prepare() throws CoreException {
+    DestinationHelper.logWarningIfNotNull(destWarning, () -> destWarning = true, getDestination(),
+        "{} uses destination, use 'path' instead", LoggingHelper.friendlyName(this));
+    DestinationHelper.mustHaveEither(getPath(), getDestination());
+  }
+
+
+  @Override
+  protected void doProduce(AdaptrisMessage msg, String uncPath) throws ProduceException {
     try {
-      String uncPath = dest.getDestination(msg);
       SmbPath smbRoot = SmbPath.parse(uncPath);
-      SmbPath filePath= new SmbPath(smbRoot, filenameCreator().createName(msg));
+      SmbPath filePath = new SmbPath(smbRoot, filenameCreator().createName(msg));
       SMBConnection conn = retrieveConnection(SMBConnection.class);
       Connector worker = conn.createOrGetWorker(filePath);
       WriteMode mode = mode();
@@ -129,9 +161,20 @@ public class SMBProducer extends ProduceOnlyProducerImp {
     };
   }
 
+  public SMBProducer withPath(String s) {
+    setPath(s);
+    return this;
+  }
+
+  @Override
+  public String endpoint(AdaptrisMessage msg) throws ProduceException {
+    return DestinationHelper.resolveProduceDestination(getPath(), getDestination(), msg);
+  }
+
   // Probably is just a java.util.BiConsumer really.
   @FunctionalInterface
   private interface EncodedWriter {
     void write(AdaptrisMessage msg, OutputStream out) throws Exception;
   }
+
 }

@@ -19,11 +19,9 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotBlank;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
@@ -111,12 +109,12 @@ public class DirectoryEntityService extends ServiceImp
 
 	/**
 	 * Depending on whether the metadata key is set, put the directory listing output in the correct place (metadata or payload).
-	 * 
+	 *
 	 * @param message
 	 *            The message.
 	 * @param output
 	 *            The directory listing.
-	 * 
+	 *
 	 * @throws InterlokException
 	 *             Thrown if there is a problem with the metadata key.
 	 */

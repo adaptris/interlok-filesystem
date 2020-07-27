@@ -18,12 +18,9 @@ package com.adaptris.filesystem;
 
 import java.io.IOException;
 import java.io.OutputStream;
-
+import javax.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.InputFieldHint;
@@ -65,7 +62,7 @@ public class ZipService extends ServiceImp
 
 	/**
 	 * Get the directory to zip.
-	 * 
+	 *
 	 * @return The directory to zip.
 	 */
 	public String getDirectoryPath()
@@ -75,7 +72,7 @@ public class ZipService extends ServiceImp
 
 	/**
 	 * Set the directory to zip.
-	 * 
+	 *
 	 * @param directoryPath
 	 *            The directory to zip.
 	 */

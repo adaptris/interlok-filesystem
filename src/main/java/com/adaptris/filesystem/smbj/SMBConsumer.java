@@ -144,10 +144,9 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
 
   @Override
   protected void prepareConsumer() throws CoreException {
-    if (getDestination() != null) {
-      LoggingHelper.logWarning(destinationWarningLogged, () -> destinationWarningLogged = true,
-          "{} uses destination, use path instead", LoggingHelper.friendlyName(this));
-    }
+    DestinationHelper.logWarningIfNotNull(destinationWarningLogged,
+        () -> destinationWarningLogged = true, getDestination(),
+        "{} uses destination, use 'path' instead", LoggingHelper.friendlyName(this));
     DestinationHelper.mustHaveEither(getPath(), getDestination());
   }
 
@@ -268,6 +267,11 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   public <T extends SMBConsumer> T withFileFilterImp(String s) {
     setFileFilterImp(s);
     return (T) this;
+  }
+
+  public SMBConsumer withPath(String s) {
+    setPath(s);
+    return this;
   }
 
   @Override

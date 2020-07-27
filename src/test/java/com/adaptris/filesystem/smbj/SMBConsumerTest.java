@@ -35,7 +35,6 @@ import org.apache.commons.io.IOUtils;
 import org.awaitility.Awaitility;
 import org.junit.Test;
 import org.mockito.Mockito;
-import com.adaptris.core.ConfiguredConsumeDestination;
 import com.adaptris.core.ConsumerCase;
 import com.adaptris.core.CoreConstants;
 import com.adaptris.core.PollerImp.Callback;
@@ -82,6 +81,7 @@ public class SMBConsumerTest extends ConsumerCase {
     StandaloneConsumer sc = new StandaloneConsumer(new MockConnection(), consumer);
     sc.registerAdaptrisMessageListener(listener);
     try {
+      LifecycleHelper.prepare(sc);
       LifecycleHelper.initAndStart(sc);
       Awaitility.await()
         .atMost(Duration.ofSeconds(5))
@@ -96,8 +96,7 @@ public class SMBConsumerTest extends ConsumerCase {
   @Test
   public void testConsume_WithEncoder() throws Exception {
     MockMessageListener listener = new MockMessageListener();
-    SMBConsumer consumer = new SMBConsumer().withFileFilterImp(null);
-    consumer.setDestination(new ConfiguredConsumeDestination(SMB_PATH));
+    SMBConsumer consumer = new SMBConsumer().withFileFilterImp(null).withPath(SMB_PATH);
     consumer.setEncoder(new MockEncoder());
     consumer.setPoller(new RandomIntervalPoller(new TimeInterval(1L, TimeUnit.SECONDS)));
     StandaloneConsumer sc = new StandaloneConsumer(new MockConnection(), consumer);
