@@ -35,7 +35,7 @@ ext {
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
   tikaVersion = "1.24.1"
-  mockitoVersion = '3.5.9'
+  mockitoVersion = '3.5.10'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
