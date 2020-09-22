@@ -1,52 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
   <suppress>
-    <notes><![CDATA[
-    OWASP 6.0.1 thinks that we're somehow related to gitlab which is a load of crap.
-    This gets rid of everythign > 7.0
-    ]]></notes>
-    <cve>CVE-2018-20229</cve>
-    <cve>CVE-2019-10113</cve>
-    <cve>CVE-2019-10112</cve>
-    <cve>CVE-2019-10114</cve>
-    <cve>CVE-2019-6781</cve>
-    <cve>CVE-2020-11505</cve>
-    <cve>CVE-2019-6797</cve>
-    <cve>CVE-2019-10640</cve>
-    <cve>CVE-2018-19856</cve>
-    <cve>CVE-2019-15589</cve>
-    <cve>CVE-2020-13306</cve>
-    <cve>CVE-2020-13309</cve>
-    <cve>CVE-2020-10954</cve>
-    <cve>CVE-2020-13302</cve>
-    <cve>CVE-2020-13304</cve>
-    <cve>CVE-2019-5486</cve>
-    <cve>CVE-2020-13315</cve>
-    <cve>CVE-2018-14603</cve>
-    <cve>CVE-2019-9174</cve>
-    <cve>CVE-2018-14602</cve>
-    <cve>CVE-2020-13274</cve>
-    <cve>CVE-2019-9218</cve>
-    <cve>CVE-2019-9217</cve>
-    <cve>CVE-2017-12426</cve>
-    <cve>CVE-2019-15575</cve>
-    <cve>CVE-2019-15576</cve>
-    <cve>CVE-2019-9220</cve>
-    <cve>CVE-2019-15736</cve>
-    <cve>CVE-2017-0919</cve>
-    <cve>CVE-2019-9223</cve>
-    <cve>CVE-2019-9222</cve>
-    <cve>CVE-2019-6240</cve>
-    <cve>CVE-2018-14364</cve>
-    <cve>CVE-2019-13003</cve>
-    <cve>CVE-2017-0921</cve>
-    <cve>CVE-2018-8971</cve>
-    <cve>CVE-2019-9485</cve>
-    <cve>CVE-2020-7968</cve>
-    <cve>CVE-2020-10087</cve>
+   <notes><![CDATA[
+   file name: asn-one-0.4.0.jar
+   ]]></notes>
+   <packageUrl regex="true">^pkg:maven/com\.hierynomus/asn\-one@.*$</packageUrl>
+   <cpe>cpe:/a:gitlab:gitlab</cpe>
   </suppress>
-
-
-
-
 </suppressions>
