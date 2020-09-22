@@ -25,7 +25,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ConfiguredDestination;
 import com.adaptris.core.FormattedFilenameCreator;
 import com.adaptris.core.ProducerCase;
 import com.adaptris.core.ServiceCase;
@@ -53,16 +52,16 @@ public class SMBProducerTest extends ProducerCase {
 
   @Override
   protected StandaloneProducer retrieveObjectForSampleConfig() {
-    SMBProducer producer = new SMBProducer().withMode(new CreateMode()).withFilenameCreator(new FormattedFilenameCreator());
-    producer.setDestination(new ConfiguredDestination(SMB_PATH));
+    SMBProducer producer = new SMBProducer().withMode(new CreateMode())
+        .withFilenameCreator(new FormattedFilenameCreator()).withPath(SMB_PATH);
     return new StandaloneProducer(new SMBConnection(), producer);
   }
 
 
   @Test
   public void testProduce() throws Exception {
-    SMBProducer producer = new SMBProducer().withMode(new CreateMode()).withFilenameCreator(new FormattedFilenameCreator());
-    producer.setDestination(new ConfiguredDestination(SMB_PATH));
+    SMBProducer producer = new SMBProducer().withMode(new CreateMode())
+        .withFilenameCreator(new FormattedFilenameCreator()).withPath(SMB_PATH);
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
 
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(STANDARD_PAYLOAD);
@@ -71,9 +70,8 @@ public class SMBProducerTest extends ProducerCase {
 
   @Test
   public void testProduce_WithEncoder() throws Exception {
-    SMBProducer producer = new SMBProducer();
+    SMBProducer producer = new SMBProducer().withPath(SMB_PATH);
     producer.setEncoder(new MockEncoder());
-    producer.setDestination(new ConfiguredDestination(SMB_PATH));
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
 
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(STANDARD_PAYLOAD);
@@ -84,8 +82,7 @@ public class SMBProducerTest extends ProducerCase {
   public void testBroken() throws Exception {
     AdaptrisMessage msg = new DefectiveMessageFactory(WhenToBreak.BOTH).newMessage(STANDARD_PAYLOAD);
 
-    SMBProducer producer = new SMBProducer();
-    producer.setDestination(new ConfiguredDestination(SMB_PATH));
+    SMBProducer producer = new SMBProducer().withPath(SMB_PATH);
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
 
     ServiceCase.execute(sp, msg);

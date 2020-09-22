@@ -8,15 +8,15 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '5.0.3'
-  id 'com.github.spotbugs' version '4.2.3'
-  id "io.freefair.lombok" version "5.1.0"
+  id 'com.github.spotbugs' version '4.5.0'
+  id "io.freefair.lombok" version "5.1.1"
   id 'org.owasp.dependencycheck' version '5.3.2.1'
 
 }
 
 ext {
-  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.10-SNAPSHOT'
-  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.10-SNAPSHOT'
+  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.11-SNAPSHOT'
+  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.11-SNAPSHOT'
   nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -35,7 +35,7 @@ ext {
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
   tikaVersion = "1.24.1"
-  mockitoVersion = '3.3.3'
+  mockitoVersion = '3.5.9'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -119,8 +119,8 @@ dependencies {
   //   exclude group: "com.fasterxml.jackson.core", module: "jackson-annotations"
   //   exclude group: "com.google.guava", module: "guava"
   // }
-  // compile "com.fasterxml.woodstox:woodstox-core:5.1.0", optional
-  // compile "org.codehaus.woodstox:stax2-api:4.1", optional
+  // compile "com.fasterxml.woodstox:woodstox-core:+", optional
+  // compile "org.codehaus.woodstox:stax2-api:+", optional
 
   annotationProcessor ("com.adaptris:interlok-core-apt:$interlokCoreVersion") {changing= true}
 
