@@ -31,7 +31,7 @@ import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldHint;
-import com.adaptris.annotation.Removal;
+import com.adaptris.validation.constraints.ConfigDeprecated;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageEncoder;
 import com.adaptris.core.AdaptrisMessageFactory;
@@ -114,7 +114,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
    */
   @Deprecated
   @Valid
-  @Removal(version = "4.0.0", message = "Use 'path' and 'filter-expression' instead")
+  @ConfigDeprecated(removalVersion = "4.0.0", message = "Use 'path' and 'filter-expression' instead", groups = Deprecated.class)
   @Getter
   @Setter
   private ConsumeDestination destination;
