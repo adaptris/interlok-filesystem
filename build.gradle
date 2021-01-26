@@ -8,15 +8,15 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '5.0.3'
-  id 'com.github.spotbugs' version '4.5.1'
+  id 'com.github.spotbugs' version '4.6.0'
   id "io.freefair.lombok" version "5.3.0"
-  id 'org.owasp.dependencycheck' version '6.0.3'
+  id 'org.owasp.dependencycheck' version '6.0.5'
 
 }
 
 ext {
-  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.11-SNAPSHOT'
-  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.11-SNAPSHOT'
+  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '3.12-SNAPSHOT'
+  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '3.12-SNAPSHOT'
   nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -34,8 +34,8 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
-  tikaVersion = "1.24.1"
-  mockitoVersion = '3.6.0'
+  tikaVersion = "1.25"
+  mockitoVersion = '3.7.0'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -65,7 +65,8 @@ ext.buildInfo = { ->
     }
 }
 
-sourceCompatibility = 1.8
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
 group   = 'com.adaptris'
 version = releaseVersion
 def versionDir = "$buildDir/version"
@@ -109,7 +110,7 @@ dependencies {
   compile ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   compile "org.apache.commons:commons-compress:1.20"
   compile "org.slf4j:slf4j-api:$slf4jVersion"
-  compile "org.json:json:20200518"
+  compile "org.json:json:20201115"
   compile "org.apache.tika:tika-core:$tikaVersion"
   compile "com.hierynomus:smbj:0.10.0"
 
