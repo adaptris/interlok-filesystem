@@ -12,16 +12,18 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 
 package com.adaptris.filesystem;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
+
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.MessageDrivenDestination;
@@ -30,6 +32,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * @author mwarman
+ * @config directory-extraction-mode
  */
 @XStreamAlias("directory-extraction-mode")
 public class DirectoryExtractionMode implements ExtractionMode {
