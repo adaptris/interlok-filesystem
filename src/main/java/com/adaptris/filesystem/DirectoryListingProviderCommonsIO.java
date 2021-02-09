@@ -10,6 +10,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * @author mwarman
+ * @config commons-io-directory-listing-provider
  */
 @XStreamAlias("commons-io-directory-listing-provider")
 public class DirectoryListingProviderCommonsIO implements DirectoryListingProvider{

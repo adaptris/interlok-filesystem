@@ -18,14 +18,16 @@ package com.adaptris.filesystem.smbj;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
+
 import javax.validation.Valid;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
+
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.annotation.InputFieldHint;
-import com.adaptris.validation.constraints.ConfigDeprecated;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.FileNameCreator;
@@ -36,16 +38,17 @@ import com.adaptris.core.ProduceOnlyProducerImp;
 import com.adaptris.core.util.DestinationHelper;
 import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.core.util.LoggingHelper;
+import com.adaptris.validation.constraints.ConfigDeprecated;
 import com.hierynomus.smbj.common.SmbPath;
 import com.hierynomus.smbj.share.File;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  * Produce to a SMB share.
- *
  *
  * @config smb-producer
  *

@@ -12,7 +12,7 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 
 package com.adaptris.filesystem;
 
@@ -34,6 +34,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
  * @author mwarman
+ * @config file-extraction-mode
  */
 @XStreamAlias("file-extraction-mode")
 public class FileExtractionMode implements ExtractionMode {
