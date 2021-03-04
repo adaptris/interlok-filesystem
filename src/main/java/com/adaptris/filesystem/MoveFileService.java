@@ -19,9 +19,8 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-
 import javax.validation.constraints.NotNull;
-
+import org.apache.commons.lang3.BooleanUtils;
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
@@ -52,7 +51,6 @@ public class MoveFileService extends ServiceImp {
   private String newPath;
 
   @AdvancedConfig
-  @NotNull
   @InputFieldDefault(value = "false")
   private Boolean moveDirectory;
 
@@ -121,13 +119,14 @@ public class MoveFileService extends ServiceImp {
   public void setMoveDirectory(Boolean moveDirectory) {
     this.moveDirectory = moveDirectory;
   }
-
+ 
   public MoveFileService withMoveDirectory(Boolean moveDirectory){
     setMoveDirectory(moveDirectory);
     return this;
   }
 
-  public boolean moveDirectory(){
-    return getMoveDirectory() != null ? getMoveDirectory() : false;
+  public boolean moveDirectory() {
+    return BooleanUtils.toBooleanDefaultIfNull(getMoveDirectory(), false);
   }
+  
 }
