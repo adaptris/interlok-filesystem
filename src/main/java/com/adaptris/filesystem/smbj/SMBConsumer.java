@@ -15,34 +15,18 @@
  *******************************************************************************/
 package com.adaptris.filesystem.smbj;
 
-import static com.adaptris.core.CoreConstants.FS_CONSUME_DIRECTORY;
-import static com.adaptris.core.CoreConstants.FS_FILE_SIZE;
-import static com.adaptris.core.CoreConstants.ORIGINAL_NAME_KEY;
-import static com.hierynomus.protocol.commons.EnumWithValue.EnumUtils.isSet;
-import java.io.FileFilter;
-import java.io.InputStream;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import javax.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
 import com.adaptris.annotation.AdvancedConfig;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldHint;
-import com.adaptris.validation.constraints.ConfigDeprecated;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageEncoder;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.AdaptrisPollingConsumer;
-import com.adaptris.core.ConsumeDestination;
 import com.adaptris.core.CoreConstants;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.fs.FsConsumer;
 import com.adaptris.core.ftp.FtpConsumer;
-import com.adaptris.core.util.DestinationHelper;
-import com.adaptris.core.util.LoggingHelper;
 import com.adaptris.interlok.cloud.RemoteFile;
 import com.adaptris.interlok.util.FileFilterBuilder;
 import com.hierynomus.msfscc.FileAttributes;
@@ -53,6 +37,20 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+
+import javax.validation.constraints.NotBlank;
+import java.io.FileFilter;
+import java.io.InputStream;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.adaptris.core.CoreConstants.FS_CONSUME_DIRECTORY;
+import static com.adaptris.core.CoreConstants.FS_FILE_SIZE;
+import static com.adaptris.core.CoreConstants.ORIGINAL_NAME_KEY;
+import static com.hierynomus.protocol.commons.EnumWithValue.EnumUtils.isSet;
 
 /**
  * Consume from a SMB share, deleting the file after consumption.
@@ -90,7 +88,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   /**
    * Set the filename filter implementation that will be used for filtering files.
    * <p>
-   * The expression that is used to filter messages is obtained from the associated {@link ConsumeDestination}, if not specified,
+   * The expression that is used to filter messages, if not specified,
    * then the default is {@code org.apache.commons.io.filefilter.RegexFileFilter} which uses the {@code java.util} regular
    * expressions to perform filtering.
    * </p>
@@ -99,7 +97,6 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
    * {@link com.adaptris.core.fs.SizeGreaterThan}) or last modified may not be supported.
    * </p>
    *
-   * @see com.adaptris.core.ConsumeDestination#getFilterExpression()
    */
   @InputFieldHint(ofType = "java.io.FileFilter")
   @AdvancedConfig
@@ -108,24 +105,12 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   private String fileFilterImp;
 
   /**
-   * The consume destination represents the SMB path and should be in the form
-   * {@code \\server-name\shareName\path\to\dir}.
-   *
-   */
-  @Deprecated
-  @Valid
-  @ConfigDeprecated(removalVersion = "4.0.0", message = "Use 'path' and 'filter-expression' instead", groups = Deprecated.class)
-  @Getter
-  @Setter
-  private ConsumeDestination destination;
-
-  /**
    * The SMB Path to read files from in the form {@code \\server-name\shareName\path\to\dir}.
    *
    */
   @Getter
   @Setter
-  // Needs to be @NotBlank when destination is removed.
+  @NotBlank
   private String path;
   /**
    * The filter expression to use when listing files.
@@ -144,10 +129,6 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
 
   @Override
   protected void prepareConsumer() throws CoreException {
-    DestinationHelper.logWarningIfNotNull(destinationWarningLogged,
-        () -> destinationWarningLogged = true, getDestination(),
-        "{} uses destination, use 'path' instead", LoggingHelper.friendlyName(this));
-    DestinationHelper.mustHaveEither(getPath(), getDestination());
   }
 
   @Override
@@ -156,11 +137,11 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   }
 
   private String smbPath() {
-    return DestinationHelper.consumeDestination(getPath(), getDestination());
+    return getPath();
   }
 
   private String filterExpression() {
-    return DestinationHelper.filterExpression(getFilterExpression(), getDestination());
+    return getFilterExpression();
   }
 
   @Override
@@ -276,7 +257,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
 
   @Override
   protected String newThreadName() {
-    return DestinationHelper.threadName(retrieveAdaptrisMessageListener(), getDestination());
+    return retrieveAdaptrisMessageListener().friendlyName();
   }
 
 }
