@@ -16,6 +16,7 @@
 
 package com.adaptris.filesystem;
 
+import com.adaptris.annotation.InputFieldHint;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.util.ExceptionHelper;
@@ -42,11 +43,10 @@ public class FileExtractionMode implements ExtractionMode {
 
   private transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-//  private MessageDrivenDestination filenameMatch;
-
   @Getter
   @Setter
   @NotBlank
+  @InputFieldHint(expression = true)
   private String filenameMatch;
 
   public FileExtractionMode(){
@@ -67,7 +67,7 @@ public class FileExtractionMode implements ExtractionMode {
         }
         String entryName = entry.getName();
         if (getFilenameMatch() != null){
-          Pattern pattern = Pattern.compile(adaptrisMessage.resolveObject(getFilenameMatch()).toString());
+          Pattern pattern = Pattern.compile(adaptrisMessage.resolve(getFilenameMatch()));
           if (!pattern.matcher(entryName).matches()){
             log.trace("The entry [{}] does not match filenameMatch [{}] skipping", entryName, getFilenameMatch());
             continue;

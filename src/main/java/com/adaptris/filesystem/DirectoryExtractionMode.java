@@ -16,6 +16,7 @@
 
 package com.adaptris.filesystem;
 
+import com.adaptris.annotation.InputFieldHint;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.util.ExceptionHelper;
@@ -41,6 +42,7 @@ public class DirectoryExtractionMode implements ExtractionMode {
   @NotBlank
   @Getter
   @Setter
+  @InputFieldHint(expression = true)
   private String outputDirectory;
 
   public DirectoryExtractionMode(){
@@ -58,7 +60,7 @@ public class DirectoryExtractionMode implements ExtractionMode {
       if (getOutputDirectory() == null) {
         messageTempDirectory = new File(System.getProperty("java.io.tmpdir"), adaptrisMessage.getUniqueId());
       } else {
-        messageTempDirectory = new File(adaptrisMessage.resolveObject(getOutputDirectory()).toString());
+        messageTempDirectory = new File(adaptrisMessage.resolve(getOutputDirectory()));
       }
       messageTempDirectory.mkdirs();
       TarArchiveEntry entry;
