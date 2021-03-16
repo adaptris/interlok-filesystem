@@ -25,6 +25,7 @@ import com.adaptris.core.FileNameCreator;
 import com.adaptris.core.FormattedFilenameCreator;
 import com.adaptris.core.ProduceException;
 import com.adaptris.core.ProduceOnlyProducerImp;
+import com.adaptris.core.util.DestinationHelper;
 import com.adaptris.core.util.ExceptionHelper;
 import com.hierynomus.smbj.common.SmbPath;
 import com.hierynomus.smbj.share.File;
@@ -148,7 +149,7 @@ public class SMBProducer extends ProduceOnlyProducerImp {
 
   @Override
   public String endpoint(AdaptrisMessage msg) throws ProduceException {
-    return getPath();
+    return DestinationHelper.resolveProduceDestination(getPath(), msg);
   }
 
   // Probably is just a java.util.BiConsumer really.

@@ -29,7 +29,6 @@ import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.regex.Pattern;
@@ -43,9 +42,11 @@ public class FileExtractionMode implements ExtractionMode {
 
   private transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
+  /**
+   * A resolvable regular expression to match which files within the archive to extract.
+   */
   @Getter
   @Setter
-  @NotBlank
   @InputFieldHint(expression = true)
   private String filenameMatch;
 

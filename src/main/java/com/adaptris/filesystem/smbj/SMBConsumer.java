@@ -27,6 +27,7 @@ import com.adaptris.core.CoreConstants;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.fs.FsConsumer;
 import com.adaptris.core.ftp.FtpConsumer;
+import com.adaptris.core.util.DestinationHelper;
 import com.adaptris.interlok.cloud.RemoteFile;
 import com.adaptris.interlok.util.FileFilterBuilder;
 import com.hierynomus.msfscc.FileAttributes;
@@ -88,7 +89,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   /**
    * Set the filename filter implementation that will be used for filtering files.
    * <p>
-   * The expression that is used to filter messages, if not specified,
+   * The expression that is used to filter messages is obtained from the {@code fileFilter}, if not specified,
    * then the default is {@code org.apache.commons.io.filefilter.RegexFileFilter} which uses the {@code java.util} regular
    * expressions to perform filtering.
    * </p>
@@ -121,8 +122,6 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
   @Getter
   @Setter
   private String filterExpression;
-
-  private transient boolean destinationWarningLogged = false;
 
   // Always non-null because FileFilterBuilder does that
   protected transient FileFilter fileFilter;
@@ -257,7 +256,7 @@ public class SMBConsumer extends AdaptrisPollingConsumer {
 
   @Override
   protected String newThreadName() {
-    return retrieveAdaptrisMessageListener().friendlyName();
+    return DestinationHelper.threadName(retrieveAdaptrisMessageListener());
   }
 
 }
