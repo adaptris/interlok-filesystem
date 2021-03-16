@@ -16,11 +16,11 @@
 
 package com.adaptris.filesystem;
 
-import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ConfiguredDestination;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * @author mwarman
@@ -31,20 +31,15 @@ public class FileExtractionModeTest {
   public void getFilenameMatch() throws Exception{
     FileExtractionMode extractionMode = new FileExtractionMode();
     assertNull(extractionMode.getFilenameMatch());
-    extractionMode = new FileExtractionMode(new ConfiguredDestination("value"));
+    extractionMode = new FileExtractionMode("value");
     assertNotNull(extractionMode.getFilenameMatch());
-    assertTrue(extractionMode.getFilenameMatch() instanceof ConfiguredDestination);
+    assertEquals("value", extractionMode.getFilenameMatch());
+    extractionMode = new FileExtractionMode().withFilenameMatch("value2");
     assertNotNull(extractionMode.getFilenameMatch());
-    assertTrue(extractionMode.getFilenameMatch() instanceof ConfiguredDestination);
-    assertEquals("value", extractionMode.getFilenameMatch().getDestination(AdaptrisMessageFactory.getDefaultInstance().newMessage()));
-    extractionMode = new FileExtractionMode().withFilenameMatch(new ConfiguredDestination("value2"));
-    assertNotNull(extractionMode.getFilenameMatch());
-    assertTrue(extractionMode.getFilenameMatch() instanceof ConfiguredDestination);
-    assertEquals("value2", extractionMode.getFilenameMatch().getDestination(AdaptrisMessageFactory.getDefaultInstance().newMessage()));
+    assertEquals("value2", extractionMode.getFilenameMatch());
     extractionMode = new FileExtractionMode();
-    extractionMode.setFilenameMatch(new ConfiguredDestination("value3"));
+    extractionMode.setFilenameMatch("value3");
     assertNotNull(extractionMode.getFilenameMatch());
-    assertTrue(extractionMode.getFilenameMatch() instanceof ConfiguredDestination);
-    assertEquals("value3", extractionMode.getFilenameMatch().getDestination(AdaptrisMessageFactory.getDefaultInstance().newMessage()));
+    assertEquals("value3", extractionMode.getFilenameMatch());
   }
 }

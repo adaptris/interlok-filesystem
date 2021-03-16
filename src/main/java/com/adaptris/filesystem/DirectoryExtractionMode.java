@@ -16,19 +16,21 @@
 
 package com.adaptris.filesystem;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
+import com.adaptris.annotation.InputFieldHint;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.CoreException;
+import com.adaptris.core.util.ExceptionHelper;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.CoreException;
-import com.adaptris.core.MessageDrivenDestination;
-import com.adaptris.core.util.ExceptionHelper;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import javax.validation.constraints.NotBlank;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * @author mwarman
@@ -37,13 +39,17 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 @XStreamAlias("directory-extraction-mode")
 public class DirectoryExtractionMode implements ExtractionMode {
 
-  private MessageDrivenDestination outputDirectory;
+  @NotBlank
+  @Getter
+  @Setter
+  @InputFieldHint(expression = true)
+  private String outputDirectory;
 
   public DirectoryExtractionMode(){
 
   }
 
-  public DirectoryExtractionMode(MessageDrivenDestination outputDirectory){
+  public DirectoryExtractionMode(String outputDirectory){
     setOutputDirectory(outputDirectory);
   }
 
@@ -54,7 +60,7 @@ public class DirectoryExtractionMode implements ExtractionMode {
       if (getOutputDirectory() == null) {
         messageTempDirectory = new File(System.getProperty("java.io.tmpdir"), adaptrisMessage.getUniqueId());
       } else {
-        messageTempDirectory = new File(getOutputDirectory().getDestination(adaptrisMessage));
+        messageTempDirectory = new File(adaptrisMessage.resolve(getOutputDirectory()));
       }
       messageTempDirectory.mkdirs();
       TarArchiveEntry entry;
@@ -74,15 +80,7 @@ public class DirectoryExtractionMode implements ExtractionMode {
     }
   }
 
-  public void setOutputDirectory(MessageDrivenDestination outputDirectory) {
-    this.outputDirectory = outputDirectory;
-  }
-
-  public MessageDrivenDestination getOutputDirectory() {
-    return outputDirectory;
-  }
-
-  public DirectoryExtractionMode withOutputDirectory(MessageDrivenDestination outputDirectory){
+  public DirectoryExtractionMode withOutputDirectory(String outputDirectory){
     setOutputDirectory(outputDirectory);
     return this;
   }

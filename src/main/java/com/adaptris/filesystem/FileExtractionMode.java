@@ -16,21 +16,22 @@
 
 package com.adaptris.filesystem;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.regex.Pattern;
-
+import com.adaptris.annotation.InputFieldHint;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.CoreException;
+import com.adaptris.core.util.ExceptionHelper;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.CoreException;
-import com.adaptris.core.MessageDrivenDestination;
-import com.adaptris.core.util.ExceptionHelper;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.regex.Pattern;
 
 /**
  * @author mwarman
@@ -41,13 +42,19 @@ public class FileExtractionMode implements ExtractionMode {
 
   private transient Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-  private MessageDrivenDestination filenameMatch;
+  /**
+   * A resolvable regular expression to match which files within the archive to extract.
+   */
+  @Getter
+  @Setter
+  @InputFieldHint(expression = true)
+  private String filenameMatch;
 
   public FileExtractionMode(){
 
   }
 
-  public FileExtractionMode(MessageDrivenDestination filenameMatch){
+  public FileExtractionMode(String filenameMatch){
     setFilenameMatch(filenameMatch);
   }
 
@@ -61,7 +68,7 @@ public class FileExtractionMode implements ExtractionMode {
         }
         String entryName = entry.getName();
         if (getFilenameMatch() != null){
-          Pattern pattern = Pattern.compile(getFilenameMatch().getDestination(adaptrisMessage));
+          Pattern pattern = Pattern.compile(adaptrisMessage.resolve(getFilenameMatch()));
           if (!pattern.matcher(entryName).matches()){
             log.trace("The entry [{}] does not match filenameMatch [{}] skipping", entryName, getFilenameMatch());
             continue;
@@ -78,15 +85,7 @@ public class FileExtractionMode implements ExtractionMode {
     }
   }
 
-  public void setFilenameMatch(MessageDrivenDestination filenameMatch) {
-    this.filenameMatch = filenameMatch;
-  }
-
-  public MessageDrivenDestination getFilenameMatch() {
-    return filenameMatch;
-  }
-
-  public FileExtractionMode withFilenameMatch(MessageDrivenDestination filenameMatch){
+  public FileExtractionMode withFilenameMatch(String filenameMatch){
     setFilenameMatch(filenameMatch);
     return this;
   }
