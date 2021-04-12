@@ -15,37 +15,35 @@
  *******************************************************************************/
 package com.adaptris.filesystem.smbj;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Optional;
-import javax.validation.Valid;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ObjectUtils;
 import com.adaptris.annotation.ComponentProfile;
 import com.adaptris.annotation.DisplayOrder;
 import com.adaptris.annotation.InputFieldDefault;
 import com.adaptris.annotation.InputFieldHint;
-import com.adaptris.validation.constraints.ConfigDeprecated;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.FileNameCreator;
 import com.adaptris.core.FormattedFilenameCreator;
-import com.adaptris.core.ProduceDestination;
 import com.adaptris.core.ProduceException;
 import com.adaptris.core.ProduceOnlyProducerImp;
 import com.adaptris.core.util.DestinationHelper;
 import com.adaptris.core.util.ExceptionHelper;
-import com.adaptris.core.util.LoggingHelper;
 import com.hierynomus.smbj.common.SmbPath;
 import com.hierynomus.smbj.share.File;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Optional;
 
 /**
  * Produce to a SMB share.
- *
  *
  * @config smb-producer
  *
@@ -76,36 +74,19 @@ public class SMBProducer extends ProduceOnlyProducerImp {
   private WriteMode mode;
 
   /**
-   * The destination represents the base-directory where you are producing files to.
-   *
-   */
-  @Getter
-  @Setter
-  @Deprecated
-  @Valid
-  @ConfigDeprecated(removalVersion = "4.0.0", message = "Use 'path' instead", groups = Deprecated.class)
-  private ProduceDestination destination;
-
-  /**
    * The SMB Path to write files to in the form {@code \\server-name\shareName\path\to\dir}.
    *
    */
   @InputFieldHint(expression = true)
   @Getter
   @Setter
-  // Needs to be @NotBlank when destination is removed.
+  @NotBlank
   private String path;
 
-  private transient boolean destWarning;
-
-
   @Override
-  public void prepare() throws CoreException {
-    DestinationHelper.logWarningIfNotNull(destWarning, () -> destWarning = true, getDestination(),
-        "{} uses destination, use 'path' instead", LoggingHelper.friendlyName(this));
-    DestinationHelper.mustHaveEither(getPath(), getDestination());
+  public void prepare() throws CoreException
+  {
   }
-
 
   @Override
   protected void doProduce(AdaptrisMessage msg, String uncPath) throws ProduceException {
@@ -168,7 +149,7 @@ public class SMBProducer extends ProduceOnlyProducerImp {
 
   @Override
   public String endpoint(AdaptrisMessage msg) throws ProduceException {
-    return DestinationHelper.resolveProduceDestination(getPath(), getDestination(), msg);
+    return DestinationHelper.resolveProduceDestination(getPath(), msg);
   }
 
   // Probably is just a java.util.BiConsumer really.

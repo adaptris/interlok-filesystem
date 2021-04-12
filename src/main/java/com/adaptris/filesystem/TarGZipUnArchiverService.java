@@ -12,9 +12,14 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 
 package com.adaptris.filesystem;
+
+import java.io.IOException;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
@@ -22,13 +27,11 @@ import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
 import com.adaptris.core.util.ExceptionHelper;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
-
-import java.io.IOException;
 
 /**
  * @author mwarman
+ *
+ * @config tar-gzip-unarchiver-service
  */
 @XStreamAlias("tar-gzip-unarchiver-service")
 public class TarGZipUnArchiverService extends ServiceImp {

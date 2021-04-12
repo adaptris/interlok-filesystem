@@ -12,19 +12,31 @@
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-*/
+ */
 
 package com.adaptris.filesystem;
 
-import com.adaptris.annotation.*;
-import com.adaptris.core.*;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import javax.validation.constraints.NotNull;
+import org.apache.commons.lang3.BooleanUtils;
+import com.adaptris.annotation.AdapterComponent;
+import com.adaptris.annotation.AdvancedConfig;
+import com.adaptris.annotation.ComponentProfile;
+import com.adaptris.annotation.InputFieldDefault;
+import com.adaptris.annotation.InputFieldHint;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.CoreException;
+import com.adaptris.core.ServiceException;
+import com.adaptris.core.ServiceImp;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+/**
+ * Move files and / or directories to "new-path"
+ *
+ * @config move-file-service
+ */
 @XStreamAlias("move-file-service")
 @AdapterComponent
 @ComponentProfile(summary = "Will move a files and/or directories to \"new-path\"", tag = "FS, FileSystem")
@@ -39,15 +51,14 @@ public class MoveFileService extends ServiceImp {
   private String newPath;
 
   @AdvancedConfig
-  @NotNull
   @InputFieldDefault(value = "false")
   private Boolean moveDirectory;
 
   @Override
   public void doService(AdaptrisMessage message) throws ServiceException {
-    File originalFile = new File(message.resolve(this.getOriginalPath()));
+    File originalFile = new File(message.resolve(getOriginalPath()));
     if(originalFile.exists() && (moveDirectory() && originalFile.isDirectory() || originalFile.isFile())){
-      File newFile = new File(message.resolve(this.getNewPath()));
+      File newFile = new File(message.resolve(getNewPath()));
       if (!newFile.exists()) {
         try {
           Files.move(originalFile.toPath(), newFile.toPath());
@@ -108,13 +119,14 @@ public class MoveFileService extends ServiceImp {
   public void setMoveDirectory(Boolean moveDirectory) {
     this.moveDirectory = moveDirectory;
   }
-
+ 
   public MoveFileService withMoveDirectory(Boolean moveDirectory){
     setMoveDirectory(moveDirectory);
     return this;
   }
 
-  public boolean moveDirectory(){
-    return getMoveDirectory() != null ? getMoveDirectory() : false;
+  public boolean moveDirectory() {
+    return BooleanUtils.toBooleanDefaultIfNull(getMoveDirectory(), false);
   }
+  
 }

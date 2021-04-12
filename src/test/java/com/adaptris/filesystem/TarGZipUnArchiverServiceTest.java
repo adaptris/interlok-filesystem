@@ -13,21 +13,22 @@
 
 package com.adaptris.filesystem;
 
-import static org.eclipse.jetty.util.IO.delete;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.adaptris.core.AdaptrisMessage;
+import com.adaptris.core.AdaptrisMessageFactory;
+import com.adaptris.core.ServiceCase;
+import com.adaptris.core.util.LifecycleHelper;
+import org.junit.Test;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import org.junit.Test;
-import com.adaptris.core.AdaptrisMessage;
-import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ConfiguredDestination;
-import com.adaptris.core.ServiceCase;
-import com.adaptris.core.util.LifecycleHelper;
+
+import static org.eclipse.jetty.util.IO.delete;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author mwarman
@@ -43,7 +44,7 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     File file = new File(this.getClass().getClassLoader().getResource("archive.tar.gz").getFile());
     byte[] payload = Files.readAllBytes(Paths.get(file.toURI()));
     TarGZipUnArchiverService service =
-        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode(new ConfiguredDestination("^file.xml$")));
+        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode("^file.xml$"));
     LifecycleHelper.initAndStart(service);
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload);
     service.doService(message);
@@ -68,7 +69,7 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     File file = new File(this.getClass().getClassLoader().getResource("archive.tar.gz").getFile());
     byte[] payload = Files.readAllBytes(Paths.get(file.toURI()));
     TarGZipUnArchiverService service =
-        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode(new ConfiguredDestination("^dir/file1.xml$")));
+        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode("^dir/file1.xml$"));
     LifecycleHelper.initAndStart(service);
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload);
     service.doService(message);
@@ -81,7 +82,7 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     File file = new File(this.getClass().getClassLoader().getResource("archive.tar.gz").getFile());
     byte[] payload = Files.readAllBytes(Paths.get(file.toURI()));
     TarGZipUnArchiverService service =
-        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode(new ConfiguredDestination("^nomatch.xml$")));
+        new TarGZipUnArchiverService().withExtractionMode(new FileExtractionMode("^nomatch.xml$"));
     LifecycleHelper.initAndStart(service);
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload);
     service.doService(message);
@@ -95,7 +96,7 @@ public class TarGZipUnArchiverServiceTest extends ServiceCase {
     File directory = createTempDirectory();
     byte[] payload = Files.readAllBytes(Paths.get(file.toURI()));
     TarGZipUnArchiverService service = new TarGZipUnArchiverService()
-        .withExtractionMode(new DirectoryExtractionMode(new ConfiguredDestination(directory.getAbsolutePath())));
+        .withExtractionMode(new DirectoryExtractionMode(directory.getAbsolutePath()));
     LifecycleHelper.initAndStart(service);
     AdaptrisMessage message = AdaptrisMessageFactory.getDefaultInstance().newMessage(payload);
     service.doService(message);
