@@ -36,7 +36,7 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
-  tikaVersion = "1.25"
+  tikaVersion = "1.26"
   mockitoVersion = '3.9.0'
 }
 
