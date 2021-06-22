@@ -8,15 +8,15 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '6.0.0'
-  id 'com.github.spotbugs' version '4.7.0'
-  id "io.freefair.lombok" version "5.3.0"
-  id 'org.owasp.dependencycheck' version '6.1.2'
+  id 'com.github.spotbugs' version '4.7.1'
+  id "io.freefair.lombok" version "5.3.3.3"
+  id 'org.owasp.dependencycheck' version '6.2.0'
 
 }
 
 ext {
-  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '4.0-SNAPSHOT'
-  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '4.0-SNAPSHOT'
+  interlokCoreVersion = project.hasProperty('interlokCoreVersion') ? project.getProperty('interlokCoreVersion') : '4.1-SNAPSHOT'
+  releaseVersion = project.hasProperty('releaseVersion') ? project.getProperty('releaseVersion') : '4.1-SNAPSHOT'
   nexusBaseUrl = project.hasProperty('nexusBaseUrl') ? project.getProperty('nexusBaseUrl') : 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.hasProperty('mavenPublishUrl') ? project.getProperty('mavenPublishUrl') : nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -36,8 +36,8 @@ ext {
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
   slf4jVersion = '1.7.30'
-  tikaVersion = "1.25"
-  mockitoVersion = '3.8.0'
+  tikaVersion = "1.26"
+  mockitoVersion = '3.11.0'
 }
 
 if (JavaVersion.current().isJava8Compatible()) {
@@ -117,7 +117,7 @@ dependencies {
   compile "org.slf4j:slf4j-api:$slf4jVersion"
   compile "org.json:json:20210307"
   compile "org.apache.tika:tika-core:$tikaVersion"
-  compile "com.hierynomus:smbj:0.10.0"
+  compile "com.hierynomus:smbj:0.11.1"
 
   // compile "org.apache.tika:tika-parsers:$tikaVersion", optional {
   //   exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
@@ -138,7 +138,7 @@ dependencies {
     changing= true
     exclude group: "org.apache.logging.log4j"
   }
-  testCompile ("org.awaitility:awaitility:4.0.3")
+  testCompile ("org.awaitility:awaitility:4.1.0")
   testCompile ("org.mockito:mockito-core:$mockitoVersion")
   testCompile ("org.mockito:mockito-inline:$mockitoVersion")
 
