@@ -7,15 +7,15 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '7.0.0'
-  id 'com.github.spotbugs' version '4.7.9'
-  id "io.freefair.lombok" version "6.2.0"
-  id 'org.owasp.dependencycheck' version '6.5.0.1'
+  id 'com.github.spotbugs' version '5.0.5'
+  id "io.freefair.lombok" version "6.3.0"
+  id 'org.owasp.dependencycheck' version '6.5.3'
 
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.3-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '4.3-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.4-SNAPSHOT'
+  releaseVersion = project.findProperty('releaseVersion') ?: '4.4-SNAPSHOT'
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -33,9 +33,9 @@ ext {
 
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = '1.7.32'
-  tikaVersion = "2.1.0"
-  mockitoVersion = '4.0.0'
+  slf4jVersion = '1.7.35'
+  tikaVersion = "2.2.1"
+  mockitoVersion = '4.3.1'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -125,7 +125,7 @@ dependencies {
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   api "org.apache.commons:commons-compress:1.21"
   implementation "org.slf4j:slf4j-api:$slf4jVersion"
-  api "org.json:json:20210307"
+  api "org.json:json:20211205"
   api "org.apache.tika:tika-core:$tikaVersion"
   api "com.hierynomus:smbj:0.11.3"
 
@@ -271,6 +271,7 @@ publishing {
       pom.withXml {
         asNode().appendNode("name", componentName)
         asNode().appendNode("description", componentDesc)
+		asNode().appendNode("url", "https://interlok.adaptris.net/interlok-docs/#/")
         def properties = asNode().appendNode("properties")
         properties.appendNode("target", "3.6.6+")
         properties.appendNode("tags", "filesystem")
@@ -293,20 +294,15 @@ publishing {
 spotbugsMain {
   effort = "max"
   reportLevel = "high"
-  // showProgress = "true"
-  effort = "max"
-  // Ignore failures?
-  // ignoreFailures = false
   reports {
     xml {
-      enabled = false
+      required.set(false)
     }
     html {
-      enabled = true
+      required.set(true)
+      stylesheet = 'default.xsl'
     }
   }
-  // includeFilter = new File("$rootDir/gradle/spotbugs-filter.xml")
-  // excludeFilter = new File("$rootDir/gradle/spotbugs-exclude.xml")
 }
 
 dependencyCheck  {
