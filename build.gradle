@@ -127,7 +127,7 @@ dependencies {
   implementation "org.slf4j:slf4j-api:$slf4jVersion"
   api "org.json:json:20211205"
   api "org.apache.tika:tika-core:$tikaVersion"
-  api "com.hierynomus:smbj:0.11.3"
+  api "com.hierynomus:smbj:0.11.5"
 
   // compile "org.apache.tika:tika-parsers:$tikaVersion", optional {
   //   exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
