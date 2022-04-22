@@ -316,6 +316,10 @@ dependencyCheck  {
   }
 }
 
+lombok {
+  version = "1.18.22"
+}
+
 // disable spotbugsTests which checks our test code..
 spotbugsTest.enabled = false
 clean.dependsOn deleteGeneratedFiles
