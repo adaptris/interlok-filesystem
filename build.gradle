@@ -7,15 +7,15 @@ plugins {
   id 'jacoco'
   // Manage optional dependencies in maven pom.
   id 'nebula.optional-base' version '7.0.0'
-  id 'com.github.spotbugs' version '5.0.5'
-  id "io.freefair.lombok" version "6.3.0"
-  id 'org.owasp.dependencycheck' version '6.5.3'
+  id 'com.github.spotbugs' version '5.0.7'
+  id "io.freefair.lombok" version "6.4.3"
+  id 'org.owasp.dependencycheck' version '7.1.0.1'
 
 }
 
 ext {
-  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.4-SNAPSHOT'
-  releaseVersion = project.findProperty('releaseVersion') ?: '4.4-SNAPSHOT'
+  interlokCoreVersion = project.findProperty('interlokCoreVersion') ?: '4.5-SNAPSHOT'
+  releaseVersion = project.findProperty('releaseVersion') ?: '4.5-SNAPSHOT'
   nexusBaseUrl = project.findProperty('nexusBaseUrl') ?: 'https://nexus.adaptris.net/nexus'
   mavenPublishUrl = project.findProperty('mavenPublishUrl') ?: nexusBaseUrl + '/content/repositories/snapshots'
   javadocsBaseUrl = nexusBaseUrl + "/content/sites/javadocs/com/adaptris"
@@ -33,9 +33,9 @@ ext {
 
   organizationName = "Adaptris Ltd"
   organizationUrl = "http://interlok.adaptris.net"
-  slf4jVersion = '1.7.35'
-  tikaVersion = "2.2.1"
-  mockitoVersion = '4.3.1'
+  slf4jVersion = '1.7.36'
+  tikaVersion = "2.4.0"
+  mockitoVersion = '4.5.1'
 }
 
 ext.gitBranchNameOrTimestamp = { branchName ->
@@ -125,9 +125,9 @@ dependencies {
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   api "org.apache.commons:commons-compress:1.21"
   implementation "org.slf4j:slf4j-api:$slf4jVersion"
-  api "org.json:json:20211205"
+  api "org.json:json:20220320"
   api "org.apache.tika:tika-core:$tikaVersion"
-  api "com.hierynomus:smbj:0.11.3"
+  api "com.hierynomus:smbj:0.11.5"
 
   // compile "org.apache.tika:tika-parsers:$tikaVersion", optional {
   //   exclude group: "com.fasterxml.jackson.core", module: "jackson-databind"
@@ -143,7 +143,7 @@ dependencies {
   testImplementation "junit:junit:4.13.2"
   testImplementation ("org.slf4j:slf4j-simple:$slf4jVersion")
   testImplementation ("com.adaptris:interlok-stubs:$interlokCoreVersion") { changing= true }
-  testImplementation ("org.awaitility:awaitility:4.1.1")
+  testImplementation ("org.awaitility:awaitility:4.2.0")
   testImplementation ("org.mockito:mockito-core:$mockitoVersion")
   testImplementation ("org.mockito:mockito-inline:$mockitoVersion")
 
@@ -314,6 +314,10 @@ dependencyCheck  {
   analyzers {
     assemblyEnabled=false
   }
+}
+
+lombok {
+  version = "1.18.22"
 }
 
 // disable spotbugsTests which checks our test code..
