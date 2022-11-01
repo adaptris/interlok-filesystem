@@ -122,7 +122,7 @@ configurations.all {
 dependencies {
   api ("com.adaptris:interlok-core:$interlokCoreVersion") { changing= true}
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
-  api "org.apache.commons:commons-compress:1.21"
+  api "org.apache.commons:commons-compress:1.22"
   implementation "org.slf4j:slf4j-api:$slf4jVersion"
   api "org.json:json:20220924"
   api "org.apache.tika:tika-core:$tikaVersion"
