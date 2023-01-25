@@ -36,7 +36,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
  * @config unzip-service
  */
 @AdapterComponent
-@ComponentProfile(summary = "Zip the contents of the message", tag = "service,zip,unzip")
+@ComponentProfile(summary = "Unzip the contents of the message to a location, making the directory the payload", tag = "service,zip,unzip")
 @XStreamAlias("unzip-service")
 public class UnzipService extends ServiceImp
 {
