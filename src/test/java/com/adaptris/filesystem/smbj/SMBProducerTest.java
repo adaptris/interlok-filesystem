@@ -15,19 +15,18 @@
  *******************************************************************************/
 package com.adaptris.filesystem.smbj;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import java.io.ByteArrayOutputStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.FormattedFilenameCreator;
-import com.adaptris.core.ProducerCase;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.StandaloneProducer;
 import com.adaptris.core.stubs.DefectiveMessageFactory;
@@ -38,17 +37,14 @@ import com.hierynomus.smbj.connection.Connection;
 import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
 import com.hierynomus.smbj.share.File;
+import com.adaptris.interlok.junit.scaffolding.ExampleProducerCase;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
-public class SMBProducerTest extends ProducerCase {
+public class SMBProducerTest extends ExampleProducerCase {
 
   public static final String SMB_PATH = "\\\\1.1.1.1\\shareName\\path\\to\\dir";
   public static final String STANDARD_PAYLOAD = "Hello World";
 
-
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
 
   @Override
   protected StandaloneProducer retrieveObjectForSampleConfig() {
@@ -65,7 +61,7 @@ public class SMBProducerTest extends ProducerCase {
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
 
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(STANDARD_PAYLOAD);
-    ServiceCase.execute(sp, msg);
+    ExampleServiceCase.execute(sp, msg);
   }
 
   @Test
@@ -75,17 +71,20 @@ public class SMBProducerTest extends ProducerCase {
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
 
     AdaptrisMessage msg = AdaptrisMessageFactory.getDefaultInstance().newMessage(STANDARD_PAYLOAD);
-    ServiceCase.execute(sp, msg);
+    ExampleServiceCase.execute(sp, msg);
   }
 
-  @Test(expected = ServiceException.class)
+  @Test
   public void testBroken() throws Exception {
     AdaptrisMessage msg = new DefectiveMessageFactory(WhenToBreak.BOTH).newMessage(STANDARD_PAYLOAD);
 
     SMBProducer producer = new SMBProducer().withPath(SMB_PATH);
     StandaloneProducer sp = new StandaloneProducer(new MockConnection(), producer);
+    assertThrows(ServiceException.class, ()->{
+      ExampleServiceCase.execute(sp, msg);
+    }, "Failed service");
 
-    ServiceCase.execute(sp, msg);
+    
 
   }
 
