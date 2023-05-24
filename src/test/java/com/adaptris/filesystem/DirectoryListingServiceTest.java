@@ -13,7 +13,7 @@
 
 package com.adaptris.filesystem;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -22,18 +22,18 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.common.MetadataDataOutputParameter;
 import com.adaptris.core.common.StringPayloadDataOutputParameter;
 import com.adaptris.core.services.metadata.DateFormatBuilder;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
-public class DirectoryListingServiceTest extends ServiceCase {
+public class DirectoryListingServiceTest extends ExampleServiceCase {
   private static final String METADATA_KEY = "service-test";
   private static final List<String> DEFAULT_PROVIDER_EXPECTED_FILES = Arrays.asList("text1.xml", "text2.xml", "recursive");
   private static final List<String> COMMONS_IO_PROVIDER_EXPECTED_FILES = Arrays.asList("text1.xml", "text2.xml");
@@ -41,17 +41,12 @@ public class DirectoryListingServiceTest extends ServiceCase {
       Arrays.asList("text1.xml", "text2.xml", "text3.xml");
   private String directoryPath;
 
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
-
-  @Before
+  @BeforeEach
   public void setUp() throws Exception {
     directoryPath = createTempDirectory().getAbsolutePath();
   }
 
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     cleanUpTempDirectory(new File(directoryPath));
   }

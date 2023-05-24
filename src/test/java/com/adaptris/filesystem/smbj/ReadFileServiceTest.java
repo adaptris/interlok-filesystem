@@ -1,8 +1,9 @@
 package com.adaptris.filesystem.smbj;
 
 import static com.adaptris.filesystem.smbj.SMBProducerTest.STANDARD_PAYLOAD;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -10,26 +11,22 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import java.nio.charset.StandardCharsets;
 import org.apache.commons.io.IOUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.stubs.DefectiveMessageFactory;
 import com.adaptris.core.stubs.DefectiveMessageFactory.WhenToBreak;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 import com.hierynomus.smbj.SMBClient;
 import com.hierynomus.smbj.connection.Connection;
 import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
 import com.hierynomus.smbj.share.File;
 
-public class ReadFileServiceTest extends ServiceCase {
+public class ReadFileServiceTest extends ExampleServiceCase {
 
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
 
   @Override
   protected Object retrieveObjectForSampleConfig() {
@@ -48,11 +45,13 @@ public class ReadFileServiceTest extends ServiceCase {
   }
 
 
-  @Test(expected = ServiceException.class)
+  @Test
   public void testService_Broken() throws Exception {
     AdaptrisMessage msg = new DefectiveMessageFactory(WhenToBreak.BOTH).newMessage();
     ReadFileService service = new ReadFileService().withConnection(new MockConnection()).withPath(SMBProducerTest.SMB_PATH);
-    execute(service, msg);
+    assertThrows(ServiceException.class, ()->{
+      execute(service, msg);
+    }, "Service failed");
   }
 
 

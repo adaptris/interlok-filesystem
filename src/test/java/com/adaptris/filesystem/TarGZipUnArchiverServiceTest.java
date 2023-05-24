@@ -15,9 +15,10 @@ package com.adaptris.filesystem;
 
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.util.LifecycleHelper;
-import org.junit.Test;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
+
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,18 +27,14 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 import static org.eclipse.jetty.util.IO.delete;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author mwarman
  */
-public class TarGZipUnArchiverServiceTest extends ServiceCase {
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
+public class TarGZipUnArchiverServiceTest extends ExampleServiceCase {
 
   @Test
   public void testDoServiceFile() throws Exception {

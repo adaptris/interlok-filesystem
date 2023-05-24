@@ -13,26 +13,22 @@
 
 package com.adaptris.filesystem;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.common.ConstantDataInputParameter;
 import com.adaptris.core.util.LifecycleHelper;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
 /**
  * @author mwarman
  */
-public class DeleteDirectoryServiceTest extends ServiceCase {
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
+public class DeleteDirectoryServiceTest extends ExampleServiceCase {
 
   @Test
   public void testDoServiceDirectoryWithFile() throws Exception {

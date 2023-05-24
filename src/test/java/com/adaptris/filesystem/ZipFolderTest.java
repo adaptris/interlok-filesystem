@@ -14,19 +14,21 @@
 
 package com.adaptris.filesystem;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class ZipFolderTest {
   private File tmpDir;
 
-  @Before
+  @BeforeEach
   public void init() {
     tmpDir = new File(System.getProperty("java.io.tmpdir"), "ZipFolderTest");
     if (!tmpDir.exists()) {
@@ -34,7 +36,7 @@ public class ZipFolderTest {
     }
   }
 
-  @After
+  @AfterEach
   public void deinit() {
     for (final File f : tmpDir.listFiles()) {
       f.delete();
@@ -81,10 +83,12 @@ public class ZipFolderTest {
     assertEquals(child, ZipFolder.validateTree(tempDir, child));
   }
 
-  @Test(expected = IOException.class)
+  @Test
   public void testValidateTree_Failure() throws Exception {
     File tempDir = new File(System.getProperty("java.io.tmpdir"));
     File child = new File(tempDir, "../../" + ZipFolderTest.class.getCanonicalName());
-    ZipFolder.validateTree(tempDir, child);
+    assertThrows(IOException.class, ()->{
+      ZipFolder.validateTree(tempDir, child);
+    }, "Invalid file system tree");
   }
 }

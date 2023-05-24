@@ -15,9 +15,9 @@
  *******************************************************************************/
 package com.adaptris.filesystem.smbj;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import org.junit.jupiter.api.Test;
 
 public class AuthenticationProviderTest {
 

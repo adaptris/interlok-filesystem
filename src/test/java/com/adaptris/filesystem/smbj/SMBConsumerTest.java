@@ -17,7 +17,7 @@ package com.adaptris.filesystem.smbj;
 
 import static com.adaptris.filesystem.smbj.SMBProducerTest.SMB_PATH;
 import static com.adaptris.filesystem.smbj.SMBProducerTest.STANDARD_PAYLOAD;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.awaitility.Awaitility;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import com.adaptris.core.ConsumerCase;
 import com.adaptris.core.CoreConstants;

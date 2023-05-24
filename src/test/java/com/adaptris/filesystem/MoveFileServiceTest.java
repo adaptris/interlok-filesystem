@@ -1,27 +1,24 @@
 package com.adaptris.filesystem;
 
 import static org.eclipse.jetty.util.IO.delete;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
+
 
 /**
  * @author mwarman
  */
-public class MoveFileServiceTest extends ServiceCase {
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
+public class MoveFileServiceTest extends ExampleServiceCase {
 
   @Test
   public void testCannotMoveFile() throws Exception {

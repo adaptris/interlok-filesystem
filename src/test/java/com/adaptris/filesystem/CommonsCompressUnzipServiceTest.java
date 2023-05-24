@@ -13,39 +13,35 @@
 
 package com.adaptris.filesystem;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.File;
 import java.io.IOException;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.lms.FileBackedMessageFactory;
 import com.adaptris.core.stubs.DefectiveMessageFactory;
 import com.adaptris.filesystem.stubs.DefectiveFileBasedAdaptrisMessage;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
 /**
  * @author mwarman
  */
-public class CommonsCompressUnzipServiceTest extends ServiceCase {
+public class CommonsCompressUnzipServiceTest extends ExampleServiceCase {
 
   private File tempDir;
   private String tempDirCanonicalPath;
 
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
 
-  @Before
+  @BeforeEach
   public void setUp() throws IOException {
     tempDir = File.createTempFile(CommonsCompressUnzipServiceTest.class.getSimpleName(), "", null);
     tempDir.delete();
@@ -55,7 +51,7 @@ public class CommonsCompressUnzipServiceTest extends ServiceCase {
     tempDirCanonicalPath = tempDir.getCanonicalPath();
   }
 
-  @After
+  @AfterEach
   public void tearDown() {
     for (final File f : tempDir.listFiles()) {
       f.delete();
