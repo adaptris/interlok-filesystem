@@ -55,7 +55,6 @@ jobs:
             - ~/.gradle/wrapper
           key: dependencies-{{ .Environment.CIRCLE_JOB}}-{{ checksum "build.gradle" }}
 
-
 workflows:
   version: 2
   on_commit:
