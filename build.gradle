@@ -124,7 +124,7 @@ dependencies {
   api ("com.adaptris:interlok-common:$interlokCoreVersion") { changing= true}
   api "org.apache.commons:commons-compress:1.23.0"
   implementation "org.slf4j:slf4j-api:$slf4jVersion"
-  api "org.json:json:20230227"
+  api "org.json:json:20230618"
   api "org.apache.tika:tika-core:$tikaVersion"
   api "com.hierynomus:smbj:0.11.5"
 
