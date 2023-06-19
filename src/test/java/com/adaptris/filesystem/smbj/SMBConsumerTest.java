@@ -54,6 +54,7 @@ import com.hierynomus.smbj.session.Session;
 import com.hierynomus.smbj.share.DiskShare;
 import com.hierynomus.smbj.share.File;
 
+@SuppressWarnings("deprecation")
 public class SMBConsumerTest extends ConsumerCase {
 
   @Override

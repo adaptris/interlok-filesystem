@@ -149,7 +149,7 @@ public class SMBProducer extends ProduceOnlyProducerImp {
 
   @Override
   public String endpoint(AdaptrisMessage msg) throws ProduceException {
-    return DestinationHelper.resolveProduceDestination(getPath(), msg);
+    return msg.resolve(getPath());
   }
 
   // Probably is just a java.util.BiConsumer really.
