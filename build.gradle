@@ -322,7 +322,6 @@ sonar {
     property "sonar.projectKey", "adaptris_interlok-filesystem"
     property "sonar.organization", "adaptris-org"
     property "sonar.host.url", "https://sonarcloud.io"
-    property 'sonar.coverage.jacoco.xmlReportPaths', "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
   }
 }
 
