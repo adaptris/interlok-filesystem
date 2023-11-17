@@ -15,11 +15,11 @@
  *******************************************************************************/
 package com.adaptris.filesystem.smbj;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import java.io.ByteArrayOutputStream;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import com.hierynomus.mssmb2.SMB2CreateDisposition;
 import com.hierynomus.smbj.share.File;

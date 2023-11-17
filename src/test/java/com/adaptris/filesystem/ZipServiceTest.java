@@ -13,26 +13,21 @@
 
 package com.adaptris.filesystem;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
-import com.adaptris.core.ServiceCase;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.stubs.DefectiveMessageFactory;
 import com.adaptris.core.stubs.TempFileUtils;
+import com.adaptris.interlok.junit.scaffolding.services.ExampleServiceCase;
 
-public class ZipServiceTest extends ServiceCase {
-
-  @Override
-  public boolean isAnnotatedForJunit4() {
-    return true;
-  }
+public class ZipServiceTest extends ExampleServiceCase {
   
   @Test
   public void testZipDirectoryService() throws Exception {

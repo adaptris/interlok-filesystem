@@ -3,9 +3,7 @@ package com.adaptris.filesystem;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.AdaptrisMessageFactory;
 import com.adaptris.core.ServiceException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,35 +11,32 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.eclipse.jetty.util.IO.delete;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DirectoryEntityServiceTest {
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
 
     @Test
     public void testDefaults() {
       final DirectoryEntityService directoryEntityService = new DirectoryEntityService();
-      assertNull("Should instantiate as null", directoryEntityService.getDebugMode());
-      assertNull("Should instantiate as null", directoryEntityService.getMetadataKey());
-      assertNull("Should instantiate as null", directoryEntityService.getDirectoryPath());
-      assertFalse("Should instantiate as false", directoryEntityService.debugMode());
+      assertNull(directoryEntityService.getDebugMode(), "Should instantiate as null");
+      assertNull(directoryEntityService.getMetadataKey(), "Should instantiate as null");
+      assertNull(directoryEntityService.getDirectoryPath(), "Should instantiate as null");
+      assertFalse(directoryEntityService.debugMode(), "Should instantiate as false");
     }
 
     @Test
     public void testSetDetails() {
       final DirectoryEntityService directoryEntityService = new DirectoryEntityService();
-      assertEquals("Should instantiate as null", null, directoryEntityService.getDebugMode());
+      assertEquals(null, directoryEntityService.getDebugMode(), "Should instantiate as null");
 
       directoryEntityService.setDebugMode(true);
       directoryEntityService.setDirectoryPath("Foo");
       directoryEntityService.setMetadataKey("Hello World");
 
-      assertEquals("Should have updated \'getDebugMode\' to true", true, directoryEntityService.getDebugMode());
-      assertEquals("Should have updated \'getDirectoryPath\' to Foo", "Foo", directoryEntityService.getDirectoryPath());
-      assertEquals("Should have updated \'getMetadataKey\' to Hello World", "Hello World", directoryEntityService.getMetadataKey());
-      assertTrue("Should be set to true", directoryEntityService.debugMode());
+      assertEquals(true, directoryEntityService.getDebugMode(), "Should have updated \'getDebugMode\' to true");
+      assertEquals("Foo", directoryEntityService.getDirectoryPath(), "Should have updated \'getDirectoryPath\' to Foo");
+      assertEquals("Hello World", directoryEntityService.getMetadataKey(), "Should have updated \'getMetadataKey\' to Hello World");
+      assertTrue(directoryEntityService.debugMode(), "Should be set to true");
     }
 
     @Test
@@ -53,10 +48,9 @@ public class DirectoryEntityServiceTest {
 
       try {
         directoryEntityService.initService();
-        directoryEntityService.doService(message);
-        exception.expect(ServiceException.class);
-        exception.expectMessage("Directory path is NULL, this service ({}) will not execute.");
-        exception.expectMessage("Missing Required Parameters");
+        assertThrows(ServiceException.class, ()->{
+          directoryEntityService.doService(message);
+        }, "File path null");
       }
 
       catch (ServiceException e) {
@@ -78,14 +72,14 @@ public class DirectoryEntityServiceTest {
         directoryEntityService.setMetadataKey("Foo");
         directoryEntityService.initService();
         directoryEntityService.doService(message);
-
-        exception.expect(FileNotFoundException.class);
-        exception.expectMessage("File not found : " + directoryEntityService.getDirectoryPath());
+        assertThrows(FileNotFoundException.class, ()->{
+          directoryEntityService.doService(message);
+        }, "File not found : " + directoryEntityService.getDirectoryPath());
       }
 
       catch (ServiceException e) {
         final String msg = "java.io.FileNotFoundException: File not found : " + directoryEntityService.getDirectoryPath();
-        assertEquals("Should match error messages", msg, e.getMessage());
+        assertEquals(msg, e.getMessage(), "Should match error messages");
         }
 
       directoryEntityService.prepare();
