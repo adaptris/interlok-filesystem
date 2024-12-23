@@ -50,11 +50,11 @@ public class DirectoryEntityTest {
 
     @Test
     public void testUniqueComparable() throws InterruptedException {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DirectoryEntity directoryEntity = new DirectoryEntity(tempDir);
         DirectoryEntity directoryEntityII = new DirectoryEntity(tempDir);
         //Pausing to create new timestamp(better method welcome)
         GregorianCalendar gCal = new GregorianCalendar(2018, 11, 23, 12, 30);
-        gCal.setTimeZone(TimeZone.getTimeZone(ZoneId.of("UTC")));
         Date newDate = gCal.getTime();
         directoryEntity.setCreatedAt(newDate);
         //Confirming that directoryEntity is set to defaults
