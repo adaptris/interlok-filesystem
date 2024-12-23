@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Locale;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import com.adaptris.core.fs.FsHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import com.adaptris.annotation.AdapterComponent;
@@ -91,7 +93,7 @@ public class DirectoryListingService extends ServiceImp
 		try
 		{
 			final String path = getDirectory().extract(message);
-			final File directory = new File(path);
+			final File directory =  FsHelper.toFile(path, new File(path));
 			log.trace("ls: {} ", directory.getAbsolutePath());
 			DateFormatBuilder.DateFormatter dateFormatter = getDateFormatBuilder().build(message);
 			if (directory.exists() && directory.isDirectory())

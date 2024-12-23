@@ -19,6 +19,7 @@ package com.adaptris.filesystem;
 import com.adaptris.annotation.InputFieldHint;
 import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
+import com.adaptris.core.fs.FsHelper;
 import com.adaptris.core.util.ExceptionHelper;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Getter;
@@ -56,11 +57,13 @@ public class DirectoryExtractionMode implements ExtractionMode {
   @Override
   public void extract(TarArchiveInputStream tarArchiveInputStream, AdaptrisMessage adaptrisMessage) throws CoreException {
     try {
-      final File messageTempDirectory;
+      File messageTempDirectory;
       if (getOutputDirectory() == null) {
-        messageTempDirectory = new File(System.getProperty("java.io.tmpdir"), adaptrisMessage.getUniqueId());
+        String tmpDir = System.getProperty("java.io.tmpdir");
+        messageTempDirectory = new File(FsHelper.toFile(tmpDir, new File(tmpDir)), adaptrisMessage.getUniqueId());
       } else {
-        messageTempDirectory = new File(adaptrisMessage.resolve(getOutputDirectory()));
+        String outputDir = adaptrisMessage.resolve(getOutputDirectory());
+        messageTempDirectory = FsHelper.toFile(outputDir, new File(outputDir));
       }
       messageTempDirectory.mkdirs();
       TarArchiveEntry entry;

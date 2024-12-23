@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,6 +54,7 @@ public class DirectoryEntityTest {
         DirectoryEntity directoryEntityII = new DirectoryEntity(tempDir);
         //Pausing to create new timestamp(better method welcome)
         GregorianCalendar gCal = new GregorianCalendar(2018, 11, 23, 12, 30);
+        gCal.setTimeZone(TimeZone.getTimeZone(ZoneId.of("UTC")));
         Date newDate = gCal.getTime();
         directoryEntity.setCreatedAt(newDate);
         //Confirming that directoryEntity is set to defaults

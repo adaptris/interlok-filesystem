@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.validation.constraints.NotBlank;
+
+import com.adaptris.core.fs.FsHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.adaptris.annotation.AdapterComponent;
@@ -79,7 +81,7 @@ public class DirectoryEntityService extends ServiceImp
 		try
 		{
 			final String path = message.resolve(getDirectoryPath());
-			final File file = new File(path);
+			final File file = FsHelper.toFile(path, new File(path));
 			if (!file.exists())
 			{
 				throw new FileNotFoundException("File not found : " + path);
