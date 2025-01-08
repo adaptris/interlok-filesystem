@@ -25,6 +25,7 @@ import com.adaptris.core.AdaptrisMessage;
 import com.adaptris.core.CoreException;
 import com.adaptris.core.ServiceException;
 import com.adaptris.core.ServiceImp;
+import com.adaptris.core.fs.FsHelper;
 import com.adaptris.core.util.Args;
 import com.adaptris.core.util.ExceptionHelper;
 import com.adaptris.interlok.InterlokException;
@@ -46,7 +47,8 @@ public class DeleteDirectoryService  extends ServiceImp {
   @Override
   public void doService(AdaptrisMessage msg) throws ServiceException {
     try {
-      File directory = new File(getPath().extract(msg));
+      String path = getPath().extract(msg);
+      File directory = FsHelper.toFile(path, new File(path));
       if (directory.listFiles() != null) {
         for (final File f : directory.listFiles()) {
           f.delete();

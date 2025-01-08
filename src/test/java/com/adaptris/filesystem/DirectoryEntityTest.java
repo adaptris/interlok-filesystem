@@ -8,8 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +50,7 @@ public class DirectoryEntityTest {
 
     @Test
     public void testUniqueComparable() throws InterruptedException {
+        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
         DirectoryEntity directoryEntity = new DirectoryEntity(tempDir);
         DirectoryEntity directoryEntityII = new DirectoryEntity(tempDir);
         //Pausing to create new timestamp(better method welcome)

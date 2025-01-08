@@ -20,6 +20,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import javax.validation.constraints.NotNull;
+
+import com.adaptris.core.fs.FsHelper;
 import org.apache.commons.lang3.BooleanUtils;
 import com.adaptris.annotation.AdapterComponent;
 import com.adaptris.annotation.AdvancedConfig;
@@ -56,9 +58,11 @@ public class MoveFileService extends ServiceImp {
 
   @Override
   public void doService(AdaptrisMessage message) throws ServiceException {
-    File originalFile = new File(message.resolve(getOriginalPath()));
+    String path = message.resolve(getOriginalPath());
+    File originalFile = FsHelper.toFile(path, new File(path));
     if(originalFile.exists() && (moveDirectory() && originalFile.isDirectory() || originalFile.isFile())){
-      File newFile = new File(message.resolve(getNewPath()));
+      String newPath = message.resolve(getNewPath());
+      File newFile = FsHelper.toFile(newPath, new File(newPath));
       if (!newFile.exists()) {
         try {
           Files.move(originalFile.toPath(), newFile.toPath());

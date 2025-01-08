@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
+import com.adaptris.core.fs.FsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +71,7 @@ public class ZipFolder {
    *         compression.
    */
   public byte[] zip() throws IOException {
-    final File zipRoot = new File(folder);
+    final File zipRoot = FsHelper.toFile(folder, new File(folder));
     if (!zipRoot.exists()) {
       LOG.error("Attempting to ZIP nonexistant directory!");
       throw new FileNotFoundException("Attempting to ZIP nonexistant directory!");
