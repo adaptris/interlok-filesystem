@@ -19,9 +19,8 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import javax.validation.constraints.NotBlank;
-
 import com.adaptris.core.fs.FsHelper;
+import jakarta.validation.constraints.NotBlank;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.adaptris.annotation.AdapterComponent;

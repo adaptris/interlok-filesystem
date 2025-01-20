@@ -20,9 +20,8 @@ import java.io.File;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import com.adaptris.core.fs.FsHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
