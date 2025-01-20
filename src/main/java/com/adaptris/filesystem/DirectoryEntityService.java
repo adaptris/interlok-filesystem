@@ -19,6 +19,7 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import com.adaptris.core.fs.FsHelper;
 import jakarta.validation.constraints.NotBlank;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,7 +80,7 @@ public class DirectoryEntityService extends ServiceImp
 		try
 		{
 			final String path = message.resolve(getDirectoryPath());
-			final File file = new File(path);
+			final File file = FsHelper.toFile(path, new File(path));
 			if (!file.exists())
 			{
 				throw new FileNotFoundException("File not found : " + path);
