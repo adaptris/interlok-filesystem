@@ -19,6 +19,7 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.IOException;
 
+import com.adaptris.core.fs.FsHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,8 @@ public class UnzipService extends ServiceImp
 	@Override
 	public void doService(final AdaptrisMessage msg) throws ServiceException
 	{
-		final File messageTempDirectory = new File(System.getProperty("java.io.tmpdir"), msg.getUniqueId());
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		File messageTempDirectory = new File(FsHelper.toFile(tmpDir, new File(tmpDir)), msg.getUniqueId());
 		LOGGER.info("Extracting to temporary directory : " + messageTempDirectory);
 		if (messageTempDirectory.exists())
 		{
