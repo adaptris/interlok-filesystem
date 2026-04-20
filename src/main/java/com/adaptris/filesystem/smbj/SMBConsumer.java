@@ -40,7 +40,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.FileFilter;
 import java.io.InputStream;
 import java.util.EnumSet;

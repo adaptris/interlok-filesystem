@@ -19,8 +19,7 @@ package com.adaptris.filesystem;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import javax.validation.constraints.NotNull;
-
+import jakarta.validation.constraints.NotNull;
 import com.adaptris.core.fs.FsHelper;
 import org.apache.commons.lang3.BooleanUtils;
 import com.adaptris.annotation.AdapterComponent;
