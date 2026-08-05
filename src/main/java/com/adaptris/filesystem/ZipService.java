@@ -18,7 +18,7 @@ package com.adaptris.filesystem;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.adaptris.annotation.AdapterComponent;
